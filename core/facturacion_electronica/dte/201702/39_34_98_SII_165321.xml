@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<EnvioDTE xmlns="http://www.sii.cl/SiiDte" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sii.cl/SiiDte EnvioDTE_v10.xsd" version="1.0">
+  <SetDTE ID="SetDoc">
+    <Caratula version="1.0">
+      <RutEmisor>76369594-8</RutEmisor>
+      <RutEnvia>15140682-3</RutEnvia>
+      <RutReceptor>60803000-K</RutReceptor>
+      <FchResol>2014-08-22</FchResol>
+      <NroResol>80</NroResol>
+      <TmstFirmaEnv>2017-02-27T16:53:21</TmstFirmaEnv>
+      <SubTotDTE>
+        <TpoDTE>34</TpoDTE>
+        <NroDTE>1</NroDTE>
+      </SubTotDTE>
+    </Caratula>
+    <DTE version="1.0">
+  <Documento ID="T34F39">
+    <Encabezado>
+      <IdDoc>
+        <TipoDTE>34</TipoDTE>
+        <Folio>39</Folio>
+        <FchEmis>2017-02-27</FchEmis>
+      </IdDoc>
+      <Emisor>
+        <RUTEmisor>76369594-8</RUTEmisor>
+        <RznSoc>SERVICIOS INTEGRALES INFOSYS SPA</RznSoc>
+        <GiroEmis>Empresa de servicios integrales en Informatica</GiroEmis>
+        <Acteco>726000</Acteco>
+        <DirOrigen>31 1/2 Ote 1527</DirOrigen>
+        <CmnaOrigen>Talca</CmnaOrigen>
+      </Emisor>
+      <Receptor>
+        <RUTRecep>90380000-3</RUTRecep>
+        <RznSocRecep>S.A. FERIA DE LOS AGRICULTORES</RznSocRecep>
+        <GiroRecep>CORRETAJE DE GANADO (FERIAS DE GANA</GiroRecep>
+        <DirRecep>AV LAS RASTRAS N.948</DirRecep>
+        <CmnaRecep>TALCA</CmnaRecep>
+      </Receptor>
+      <Totales>
+        <MntExe>1321820</MntExe>
+        <MntTotal>1321820</MntTotal>
+      </Totales>
+    </Encabezado>
+    <Detalle>
+      <NroLinDet>1</NroLinDet>
+      <NmbItem>ASISTENCIA FACTURACION ELECTRONICA FERIA PARRAL </NmbItem>
+      <QtyItem>1</QtyItem>
+      <PrcItem>250000</PrcItem>
+      <MontoItem>250000</MontoItem>
+    </Detalle>
+    <Detalle>
+      <NroLinDet>2</NroLinDet>
+      <NmbItem>RECUPERACION DE GASTOS VIAJES TALCA - PARRAL </NmbItem>
+      <QtyItem>1</QtyItem>
+      <PrcItem>187000</PrcItem>
+      <MontoItem>187000</MontoItem>
+    </Detalle>
+    <Detalle>
+      <NroLinDet>3</NroLinDet>
+      <NmbItem>APOYO FERIA LINARES FEBRERO 2017</NmbItem>
+      <QtyItem>1</QtyItem>
+      <PrcItem>294940</PrcItem>
+      <MontoItem>294940</MontoItem>
+    </Detalle>
+    <Detalle>
+      <NroLinDet>4</NroLinDet>
+      <NmbItem>APOYO FERIA TALCA FEBRERO 2017</NmbItem>
+      <QtyItem>1</QtyItem>
+      <PrcItem>294940</PrcItem>
+      <MontoItem>294940</MontoItem>
+    </Detalle>
+    <Detalle>
+      <NroLinDet>5</NroLinDet>
+      <NmbItem>APOYO FERIA SAN JAVIER FEBRERO 2017</NmbItem>
+      <QtyItem>1</QtyItem>
+      <PrcItem>294940</PrcItem>
+      <MontoItem>294940</MontoItem>
+    </Detalle>
+    <TED version="1.0">
+  <DD>
+    <RE>76369594-8</RE>
+    <TD>34</TD>
+    <F>39</F>
+    <FE>2017-02-27</FE>
+    <RR>90380000-3</RR>
+    <RSR>S.A. FERIA DE LOS AGRICULTORES</RSR>
+    <MNT>1321820</MNT>
+    <IT1>ASISTENCIA FACTURACION ELECTRONICA FERIA</IT1>
+    <CAF version="1.0">
+<DA>
+<RE>76369594-8</RE>
+<RS>SERVICIOS INTEGRALES INFOSYS SPA</RS>
+<TD>34</TD>
+<RNG><D>23</D><H>122</H></RNG>
+<FA>2016-01-19</FA>
+<RSAPK><M>t1HC1WAK5xEd7WIyzkhLSkotJcxIPvHP9NEcSHXOE6SHjqvyfIKp+Ym1aLMKzDsrCzMFg4H3RshNL+pIHOwb4Q==</M><E>Aw==</E></RSAPK>
+<IDK>300</IDK>
+</DA>
+<FRMA algoritmo="SHA1withRSA">Fw80rr57s1k7bnrZ12M8YQHyAvLKGuA2yr8dLzZdCUyHp0m0cLjGgpe0Pp7LIQq8RAuWny6oyiZvZ/IvWEWstQ==</FRMA>
+</CAF>
+    <TSTED>2017-02-27T16:53:21</TSTED>
+  </DD>
+  <FRMT algoritmo="SHA1withRSA">cyBwcDGjJDZnEQqPo40efgN79TXh3nnUjIlZkjp7t5zZAET/VI6kLYsXi/IKuWriDzME/i1tmdnVD/RYHf+HLQ==</FRMT>
+</TED>
+  <TmstFirma>2017-02-27T16:53:21</TmstFirma></Documento>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#"><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><Reference URI="#T34F39"><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><DigestValue>9kf/S+7VRuWsv1KAKOfE2kVwazI=</DigestValue></Reference></SignedInfo><SignatureValue>R5Gqv6YiMq4wI6FIBfuseU7PN2y9O1tuhr9d4s4L0PiHQR9EZ2lBNAGpHi2LE7hk
+fjZqMAHs8pEXgJeMICHMdeWAXtR/RtmUGPJCDOwptL1ke3KL/RkcqRH+R7cJCD7j
+BnySM2CQgRbHX4kJuM/DlmgKoXEhK76LoRwaUeKc5UI=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>u6bbkdLragU3pKVgVkxLjRleKt4v2QV2YapaEuSZbUDIm6vc5Vcgh0Segllex1FJ
+gjxFebUS811a84ldsKymOfqGcIfQXLdeuYNlUMm/Tf6bPoKGiS2nfldaLcY4CPY3
+BezaqXmdPlkmMeS3vsyISPXq0FpP0kiYEi5ePl4ERFU=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIGZzCCBU+gAwIBAgIKQajcBgAAAAG6yzANBgkqhkiG9w0BAQUFADCB0jELMAkG
+A1UEBhMCQ0wxHTAbBgNVBAgTFFJlZ2lvbiBNZXRyb3BvbGl0YW5hMREwDwYDVQQH
+EwhTYW50aWFnbzEUMBIGA1UEChMLRS1DRVJUQ0hJTEUxIDAeBgNVBAsTF0F1dG9y
+aWRhZCBDZXJ0aWZpY2Fkb3JhMTAwLgYDVQQDEydFLUNFUlRDSElMRSBDQSBGSVJN
+QSBFTEVDVFJPTklDQSBTSU1QTEUxJzAlBgkqhkiG9w0BCQEWGHNjbGllbnRlc0Bl
+LWNlcnRjaGlsZS5jbDAeFw0xNDEwMDcyMzM2NDFaFw0xNzEwMDYyMzM2NDFaMIHp
+MQswCQYDVQQGEwJDTDETMBEGA1UECBMKREVMIE1BVUxFIDEOMAwGA1UEBxMFVGFs
+Y2ExKTAnBgNVBAoTIFNFUlZJQ0lPUyBJTlRFR1JBTEVTIElORk9TWVMgU3BBMTgw
+NgYDVQQLEy9FTVBSRVNBUyBERSBTRVJWSUNJT1MgSU5URUdSQUxFUyBERSBJTkZP
+Uk1BVElDQTEnMCUGA1UEAxMeQ0VTQVIgRURVQVJETyBNT1JBR0EgR1VUSUVSUkVa
+MScwJQYJKoZIhvcNAQkBFhhDRVNBUi5NT1JBR0FASU5GTy1TWVMuQ0wwgZ8wDQYJ
+KoZIhvcNAQEBBQADgY0AMIGJAoGBALum25HS62oFN6SlYFZMS40ZXireL9kFdmGq
+WhLkmW1AyJur3OVXIIdEnoJZXsdRSYI8RXm1EvNdWvOJXbCspjn6hnCH0Fy3XrmD
+ZVDJv03+mz6Choktp35XWi3GOAj2NwXs2ql5nT5ZJjHkt77MiEj16tBaT9JImBIu
+Xj5eBERVAgMBAAGjggKoMIICpDA9BgkrBgEEAYI3FQcEMDAuBiYrBgEEAYI3FQiC
+3IMvhZOMZoXVnReC4twnge/sPGGBmucVhq/gFQIBZAIBBDAdBgNVHQ4EFgQU9npa
+O8mYGM9Vu7jhnwiF9tIoAmIwCwYDVR0PBAQDAgTwMB8GA1UdIwQYMBaAFHjhPp/S
+ErN6PI3NMA5Ts0MpB7NVMD4GA1UdHwQ3MDUwM6AxoC+GLWh0dHA6Ly9jcmwuZS1j
+ZXJ0Y2hpbGUuY2wvZWNlcnRjaGlsZWNhRkVTLmNybDA7BggrBgEFBQcBAQQvMC0w
+KwYIKwYBBQUHMAGGH2h0dHA6Ly9vY3NwLmludGVyY2FwaXQuY29tL29jc3AwIwYD
+VR0RBBwwGqAYBggrBgEEAcEBAaAMFgoxNTE0MDY4Mi0zMCMGA1UdEgQcMBqgGAYI
+KwYBBAHBAQKgDBYKOTY5MjgxODAtNTCCAU0GA1UdIASCAUQwggFAMIIBPAYIKwYB
+BAHDUgUwggEuMC0GCCsGAQUFBwIBFiFodHRwOi8vd3d3LmUtY2VydGNoaWxlLmNs
+L0NQUy5odG0wgfwGCCsGAQUFBwICMIHvHoHsAEMAZQByAHQAaQBmAGkAYwBhAGQA
+bwAgAEYAaQByAG0AYQAgAFMAaQBtAHAAbABlAC4AIABIAGEAIABzAGkAZABvACAA
+dgBhAGwAaQBkAGEAZABvACAAZQBuACAAZgBvAHIAbQBhACAAcAByAGUAcwBlAG4A
+YwBpAGEAbAAsACAAcQB1AGUAZABhAG4AZABvACAAaABhAGIAaQBsAGkAdABhAGQA
+bwAgAGUAbAAgAEMAZQByAHQAaQBmAGkAYwBhAGQAbwAgAHAAYQByAGEAIAB1AHMA
+bwAgAHQAcgBpAGIAdQB0AGEAcgBpAG8wDQYJKoZIhvcNAQEFBQADggEBAB+TMIY1
+sR+JA4NVy4MBqyrLa9ydFFVX1Mp/g+sBoRoioleq1eUQuxVUzrae8HQZ2B6MDFu9
+aTm0FWpgYEZtjkWWaSEX8uJXGOf4Vb9mq62csn8MvQeNYg1+zLho0MYoP/aNlR1V
+M99NLtuNpOvhQcGJIZpnYdhpmveZ+3BxGkKNDXRK4/FAfwBxmHXiDZFXWsVo+p+N
+GvcqWJUPhbXpz2oNE2R8NmsPtGLBBuLJjoyF3MqPGzPfDr5GKyxNxuEpccvQVTSr
+rYZy/csSCRA2Hhn8Ips2ODsfy3O4Tbji4BiHrLkW8EcD92gbfkhL4ScmqeCSGbAH
+neBlAJwgiT+bTrg=</X509Certificate></X509Data></KeyInfo></Signature></DTE>
+  </SetDTE>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><Reference URI="#SetDoc"><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><DigestValue>P89cnJtMvBijb8/j+mPNnmjXAJc=</DigestValue></Reference></SignedInfo><SignatureValue>Z9eRe9IOdusX/kayWeETX6o/+4baub81DD2nw6bgsyZyNJCRU5qwY7NmNNb4z+F9
+2lfmvqMX3ye5zQezHg7er/6ZHtrI9RbuSn3qfKeYk6mDdXrmiH1KHp+ZkvEi5opm
+qm5nTeKTLrILqzwnu4Rlkek6mpr+2IokuV+C9WBj+K0=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>u6bbkdLragU3pKVgVkxLjRleKt4v2QV2YapaEuSZbUDIm6vc5Vcgh0Segllex1FJ
+gjxFebUS811a84ldsKymOfqGcIfQXLdeuYNlUMm/Tf6bPoKGiS2nfldaLcY4CPY3
+BezaqXmdPlkmMeS3vsyISPXq0FpP0kiYEi5ePl4ERFU=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIGZzCCBU+gAwIBAgIKQajcBgAAAAG6yzANBgkqhkiG9w0BAQUFADCB0jELMAkG
+A1UEBhMCQ0wxHTAbBgNVBAgTFFJlZ2lvbiBNZXRyb3BvbGl0YW5hMREwDwYDVQQH
+EwhTYW50aWFnbzEUMBIGA1UEChMLRS1DRVJUQ0hJTEUxIDAeBgNVBAsTF0F1dG9y
+aWRhZCBDZXJ0aWZpY2Fkb3JhMTAwLgYDVQQDEydFLUNFUlRDSElMRSBDQSBGSVJN
+QSBFTEVDVFJPTklDQSBTSU1QTEUxJzAlBgkqhkiG9w0BCQEWGHNjbGllbnRlc0Bl
+LWNlcnRjaGlsZS5jbDAeFw0xNDEwMDcyMzM2NDFaFw0xNzEwMDYyMzM2NDFaMIHp
+MQswCQYDVQQGEwJDTDETMBEGA1UECBMKREVMIE1BVUxFIDEOMAwGA1UEBxMFVGFs
+Y2ExKTAnBgNVBAoTIFNFUlZJQ0lPUyBJTlRFR1JBTEVTIElORk9TWVMgU3BBMTgw
+NgYDVQQLEy9FTVBSRVNBUyBERSBTRVJWSUNJT1MgSU5URUdSQUxFUyBERSBJTkZP
+Uk1BVElDQTEnMCUGA1UEAxMeQ0VTQVIgRURVQVJETyBNT1JBR0EgR1VUSUVSUkVa
+MScwJQYJKoZIhvcNAQkBFhhDRVNBUi5NT1JBR0FASU5GTy1TWVMuQ0wwgZ8wDQYJ
+KoZIhvcNAQEBBQADgY0AMIGJAoGBALum25HS62oFN6SlYFZMS40ZXireL9kFdmGq
+WhLkmW1AyJur3OVXIIdEnoJZXsdRSYI8RXm1EvNdWvOJXbCspjn6hnCH0Fy3XrmD
+ZVDJv03+mz6Choktp35XWi3GOAj2NwXs2ql5nT5ZJjHkt77MiEj16tBaT9JImBIu
+Xj5eBERVAgMBAAGjggKoMIICpDA9BgkrBgEEAYI3FQcEMDAuBiYrBgEEAYI3FQiC
+3IMvhZOMZoXVnReC4twnge/sPGGBmucVhq/gFQIBZAIBBDAdBgNVHQ4EFgQU9npa
+O8mYGM9Vu7jhnwiF9tIoAmIwCwYDVR0PBAQDAgTwMB8GA1UdIwQYMBaAFHjhPp/S
+ErN6PI3NMA5Ts0MpB7NVMD4GA1UdHwQ3MDUwM6AxoC+GLWh0dHA6Ly9jcmwuZS1j
+ZXJ0Y2hpbGUuY2wvZWNlcnRjaGlsZWNhRkVTLmNybDA7BggrBgEFBQcBAQQvMC0w
+KwYIKwYBBQUHMAGGH2h0dHA6Ly9vY3NwLmludGVyY2FwaXQuY29tL29jc3AwIwYD
+VR0RBBwwGqAYBggrBgEEAcEBAaAMFgoxNTE0MDY4Mi0zMCMGA1UdEgQcMBqgGAYI
+KwYBBAHBAQKgDBYKOTY5MjgxODAtNTCCAU0GA1UdIASCAUQwggFAMIIBPAYIKwYB
+BAHDUgUwggEuMC0GCCsGAQUFBwIBFiFodHRwOi8vd3d3LmUtY2VydGNoaWxlLmNs
+L0NQUy5odG0wgfwGCCsGAQUFBwICMIHvHoHsAEMAZQByAHQAaQBmAGkAYwBhAGQA
+bwAgAEYAaQByAG0AYQAgAFMAaQBtAHAAbABlAC4AIABIAGEAIABzAGkAZABvACAA
+dgBhAGwAaQBkAGEAZABvACAAZQBuACAAZgBvAHIAbQBhACAAcAByAGUAcwBlAG4A
+YwBpAGEAbAAsACAAcQB1AGUAZABhAG4AZABvACAAaABhAGIAaQBsAGkAdABhAGQA
+bwAgAGUAbAAgAEMAZQByAHQAaQBmAGkAYwBhAGQAbwAgAHAAYQByAGEAIAB1AHMA
+bwAgAHQAcgBpAGIAdQB0AGEAcgBpAG8wDQYJKoZIhvcNAQEFBQADggEBAB+TMIY1
+sR+JA4NVy4MBqyrLa9ydFFVX1Mp/g+sBoRoioleq1eUQuxVUzrae8HQZ2B6MDFu9
+aTm0FWpgYEZtjkWWaSEX8uJXGOf4Vb9mq62csn8MvQeNYg1+zLho0MYoP/aNlR1V
+M99NLtuNpOvhQcGJIZpnYdhpmveZ+3BxGkKNDXRK4/FAfwBxmHXiDZFXWsVo+p+N
+GvcqWJUPhbXpz2oNE2R8NmsPtGLBBuLJjoyF3MqPGzPfDr5GKyxNxuEpccvQVTSr
+rYZy/csSCRA2Hhn8Ips2ODsfy3O4Tbji4BiHrLkW8EcD92gbfkhL4ScmqeCSGbAH
+neBlAJwgiT+bTrg=</X509Certificate></X509Data></KeyInfo></Signature></EnvioDTE>

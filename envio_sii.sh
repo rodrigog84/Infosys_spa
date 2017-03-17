@@ -1,2 +1,2 @@
 #!/bin/bash
-wget http://192.168.1.10/Deik/core/index.php/procesos/envio_programado_sii
+wget http://angus.agricultorestalca.cl/Infosys_spa/core/index.php/procesos/envio_programado_sii

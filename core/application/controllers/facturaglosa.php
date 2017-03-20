@@ -7,7 +7,7 @@ class Facturaglosa extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		
+		$this->load->helper('format');
 		$this->load->database();
 	}
 
@@ -137,9 +137,10 @@ class Facturaglosa extends CI_Controller {
 
 		/*****************************************/
 
-		if($tipodocumento == 101 || $tipodocumento == 103){  // SI ES FACTURA ELECTRONICA O FACTURA EXENTA ELECTRONICA
+		if($tipodocumento == 101 || $tipodocumento == 103 || $tipodocumento == 106){  // SI ES FACTURA ELECTRONICA O FACTURA EXENTA ELECTRONICA
 
-			$tipo_caf = $tipodocumento == 101 ? 33 : 34;
+			//$tipo_caf = $tipodocumento == 101 ? 33 : 34;
+			$tipo_caf = tdtocaf($tipodocumento);
 
 			header('Content-type: text/plain; charset=ISO-8859-1');
 			$this->load->model('facturaelectronica');
@@ -176,6 +177,18 @@ class Facturaglosa extends CI_Controller {
 				$i++;
 			}
 
+			if($tipodocumento == 106){
+				$totales = array();
+			}else{
+
+				$totales = array(
+		                'MntNeto' => isset($datos_factura->neto) ? $datos_factura->neto : 0,
+		                'TasaIVA' => \sasco\LibreDTE\Sii::getIVA(),
+		                'IVA' => isset($datos_factura->iva) ? $datos_factura->iva : 0,
+		                'MntTotal' => isset($datos_factura->totalfactura) ? $datos_factura->totalfactura : 0);			
+			}
+
+
 
 			// datos
 			$factura = [
@@ -200,13 +213,7 @@ class Facturaglosa extends CI_Controller {
 			            'DirRecep' => substr($datos_empresa_factura->direccion,0,70), //LARGO DE DIRECCION NO PUEDE SER SUPERIOR A 70 CARACTERES
 			            'CmnaRecep' => substr($datos_empresa_factura->nombre_comuna,0,20), //LARGO DE COMUNA NO PUEDE SER SUPERIOR A 20 CARACTERES
 			        ],
-		            'Totales' => [
-		                // estos valores serán calculados automáticamente
-		                'MntNeto' => isset($datos_factura->neto) ? $datos_factura->neto : 0,
-		                'TasaIVA' => \sasco\LibreDTE\Sii::getIVA(),
-		                'IVA' => isset($datos_factura->iva) ? $datos_factura->iva : 0,
-		                'MntTotal' => isset($datos_factura->totalfactura) ? $datos_factura->totalfactura : 0,
-		            ],				        
+		            'Totales' => $totales,		     
 			    ],
 				'Detalle' => $lista_detalle
 			];
@@ -271,24 +278,40 @@ class Facturaglosa extends CI_Controller {
 			    $dte = $this->facturaelectronica->crea_archivo_dte($xml_dte,$idfactura,$tipo_caf,'sii');
 			    $dte_cliente = $this->facturaelectronica->crea_archivo_dte($xml_dte_cliente,$idfactura,$tipo_caf,'cliente');
 
+				#CONSUMO DE FOLIOS			    
+				$consumo_folios = array("xml" => "",
+					 "archivo" => "");
+		    	if($tipo_caf == 39){
+		    		$consumo_folios = $this->facturaelectronica->consumoFolios($xml_dte,$idfactura,$tipo_caf);
+		    	}
+
+				$array_update = array('dte' => $dte['xml_dte'],
+																						  'dte_cliente' => $dte_cliente['xml_dte'],
+																						  'consumo_folios' => $consumo_folios['xml'],
+																						  'estado' => 'O',
+																						  'idfactura' => $idfactura,
+																						  'path_dte' => $dte['path'],
+																						  'archivo_dte' => $dte['nombre_dte'],
+																						  'archivo_dte_cliente' => $dte_cliente['nombre_dte'],
+																						  'archivo_consumo_folios' => $consumo_folios['archivo']
+																						  );    	
+
 
 			    if($tipo_envio == 'automatico'){
-				    $track_id = $EnvioDTE->enviar();
+			    	if($tipo_caf == 39){
+			    		$this->facturaelectronica->envio_sii($idfactura);
+			    	}else{
+			    		$track_id = $EnvioDTE->enviar();	
+			    		$array_update['trackid'] = $trackid;
+			    	}
+
 			    }
 
 
 
 			    $this->db->where('f.folio', $numdocuemnto);
 			    $this->db->where('c.tipo_caf', $tipo_caf);
-				$this->db->update('folios_caf f inner join caf c on f.idcaf = c.id',array('dte' => $dte['xml_dte'],
-																						  'dte_cliente' => $dte_cliente['xml_dte'],
-																						  'estado' => 'O',
-																						  'idfactura' => $idfactura,
-																						  'path_dte' => $dte['path'],
-																						  'archivo_dte' => $dte['nombre_dte'],
-																						  'archivo_dte_cliente' => $dte_cliente['nombre_dte'],
-																						  'trackid' => $track_id
-																						  )); 
+				$this->db->update('folios_caf f inner join caf c on f.idcaf = c.id',$array_update); 
 				if($track_id != 0 && $datos_empresa_factura->e_mail != ''){ //existe track id, se envía correo
 					$this->facturaelectronica->envio_mail_dte($idfactura);
 				}
@@ -454,7 +477,7 @@ class Facturaglosa extends CI_Controller {
 				$tipodocumento = $v->tipo_documento; 
 		}
 
-		if($tipodocumento ==  101 || $tipodocumento == 103){ // FACTURA ELECTRONICA O FACTURA EXENTA ELECTRONCA
+		if($tipodocumento ==  101 || $tipodocumento == 103 || $tipodocumento == 106){ // FACTURA ELECTRONICA O FACTURA EXENTA ELECTRONCA
 				//$es_cedible = is_null($cedible) ? false : true;
 				$this->load->model('facturaelectronica');
 				$this->facturaelectronica->exportFePDF($idfactura,'id');		

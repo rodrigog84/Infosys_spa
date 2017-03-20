@@ -172,7 +172,7 @@ Ext.define('Infosys_web.controller.Facturaglosa', {
         
         var nombre = (record.id);    
         habilita = false;
-        if(nombre == 101 || nombre == 103){ // FACTURA ELECTRONICA
+        if(nombre == 101 || nombre == 103 || nombre == 106){ // FACTURA ELECTRONICA
 
             // se valida que exista certificado
             response_certificado = Ext.Ajax.request({

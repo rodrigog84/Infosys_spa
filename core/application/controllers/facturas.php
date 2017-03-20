@@ -720,69 +720,7 @@ class Facturas extends CI_Controller {
 	public function envio_sii(){
 		$idfactura = $this->input->post('idfactura');
 		$this->load->model('facturaelectronica');
-		$factura = $this->facturaelectronica->datos_dte($idfactura);
-		$config = $this->facturaelectronica->genera_config();
-		include $this->facturaelectronica->ruta_libredte();
-
-
-		$token = \sasco\LibreDTE\Sii\Autenticacion::getToken($config['firma']);
-		if (!$token) {
-		    foreach (\sasco\LibreDTE\Log::readAll() as $error){
-		    	$result['error'] = true;
-
-		    }
-		    $result['message'] = "Error de conexión con SII";		   
-		   	echo json_encode($result);
-		    exit;
-		}
-
-		$Firma = new \sasco\LibreDTE\FirmaElectronica($config['firma']); //lectura de certificado digital
-		$rut = $Firma->getId(); 
-		$rut_consultante = explode("-",$rut);
-		$RutEnvia = $rut_consultante[0]."-".$rut_consultante[1];
-
-		$xml = $factura->dte;
-
-		$EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
-		$EnvioDte->loadXML($xml);
-		$Documentos = $EnvioDte->getDocumentos();	
-
-		$DTE = $Documentos[0];
-		$RutEmisor = $DTE->getEmisor(); 
-
-		// enviar DTE
-		$result_envio = \sasco\LibreDTE\Sii::enviar($RutEnvia, $RutEmisor, $xml, $token);
-
-		// si hubo algún error al enviar al servidor mostrar
-		if ($result_envio===false) {
-		    foreach (\sasco\LibreDTE\Log::readAll() as $error){
-		        $result['error'] = true;
-		    }
-		    $result['message'] = "Error de envío de DTE";		   
-		   	echo json_encode($result);
-		    exit;
-		}
-
-		// Mostrar resultado del envío
-		if ($result_envio->STATUS!='0') {
-		    foreach (\sasco\LibreDTE\Log::readAll() as $error){
-				$result['error'] = true;
-		    }
-		    $result['message'] = "Error de envío de DTE";		   
-		   	echo json_encode($result);
-		    exit;
-		}
-
-
-		$track_id = 0;
-		$track_id = (int)$result_envio->TRACKID;
-	    $this->db->where('id', $factura->id);
-		$this->db->update('folios_caf',array('trackid' => $track_id)); 
-
-
-		$result['success'] = true;
-		$result['message'] = $track_id != 0 ? "DTE enviado correctamente" : "Error en env&iacute;o de DTE";
-		$result['trackid'] = $track_id;
+		$result = $this->envio_sii($idfactura);
 		echo json_encode($result);
 	}	
 
@@ -3165,18 +3103,7 @@ public function cargacontribuyentes(){
 		    		$consumo_folios = $this->facturaelectronica->consumoFolios($xml_dte,$idfactura,$tipo_caf);
 		    	}
 
-			    if($tipo_envio == 'automatico'){
-			    	if($tipo_caf == 39){
-			    		#$this->facturaelectronica->consumoFolios($EnvioDTE,$idfactura,$tipo_caf);
-			    	}else{
-			    		$track_id = $EnvioDTE->enviar();	
-			    	}
-				    
-			    }
-
-			    $this->db->where('f.folio', $numfactura);
-			    $this->db->where('c.tipo_caf', $tipo_caf);
-				$this->db->update('folios_caf f inner join caf c on f.idcaf = c.id',array('dte' => $dte['xml_dte'],
+				$array_update = array('dte' => $dte['xml_dte'],
 																						  'dte_cliente' => $dte_cliente['xml_dte'],
 																						  'consumo_folios' => $consumo_folios['xml'],
 																						  'estado' => 'O',
@@ -3184,9 +3111,22 @@ public function cargacontribuyentes(){
 																						  'path_dte' => $dte['path'],
 																						  'archivo_dte' => $dte['nombre_dte'],
 																						  'archivo_dte_cliente' => $dte_cliente['nombre_dte'],
-																						  'archivo_consumo_folios' => $consumo_folios['archivo'],
-																						  'trackid' => $track_id
-																						  )); 
+																						  'archivo_consumo_folios' => $consumo_folios['archivo']
+																						  );	    	
+
+			    if($tipo_envio == 'automatico'){
+			    	if($tipo_caf == 39){
+			    		$this->facturaelectronica->envio_sii($idfactura);
+			    	}else{
+			    		$track_id = $EnvioDTE->enviar();	
+			    		$array_update['trackid'] = $trackid;
+			    	}
+				    
+			    }
+
+			    $this->db->where('f.folio', $numfactura);
+			    $this->db->where('c.tipo_caf', $tipo_caf);
+				$this->db->update('folios_caf f inner join caf c on f.idcaf = c.id',$array_update); 
 
 				if($track_id != 0 && $datos_empresa_factura->e_mail != ''){ //existe track id, se envía correo
 					$this->facturaelectronica->envio_mail_dte($idfactura);

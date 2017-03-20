@@ -471,8 +471,12 @@ truncate movimiento_cuenta_corriente;
 			$rut_consultante = explode("-",$rut);
 			$RutEnvia = $rut_consultante[0]."-".$rut_consultante[1];
 
+
 			//$xml = $factura->dte;
-			$archivo = "./facturacion_electronica/dte/".$factura->path_dte.$factura->archivo_dte;
+			$ruta_xml = $factura->tipo_caf == 39 ? "consumo_folios" : "dte";
+			$archivo_xml = $factura->tipo_caf == 39 ? $factura->archivo_consumo_folios : $factura->archivo_dte;
+
+			$archivo = "./facturacion_electronica/" . $ruta_xml . "/".$factura->path_dte.$archivo_xml;
 		 	if(file_exists($archivo)){
 		 		$xml = file_get_contents($archivo);
 		 	}else{

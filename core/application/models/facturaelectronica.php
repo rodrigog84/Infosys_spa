@@ -267,7 +267,7 @@ class Facturaelectronica extends CI_Model
 
 	public function datos_dte($idfactura){
 
-		$this->db->select('f.id, f.folio, f.path_dte, f.archivo_dte,  f.archivo_dte_cliente, f.dte, f.dte_cliente, f.pdf, f.pdf_cedible, f.trackid, c.tipo_caf, tc.nombre as tipo_doc, cae.nombre as giro, cp.nombre as cond_pago, v.nombre as vendedor ')
+		$this->db->select('f.id, f.folio, f.path_dte, f.archivo_dte,  f.archivo_dte_cliente, f.dte, f.dte_cliente, f.consumo_folios, f.pdf, f.pdf_cedible, f.trackid, c.tipo_caf, tc.nombre as tipo_doc, cae.nombre as giro, cp.nombre as cond_pago, v.nombre as vendedor ')
 		  ->from('folios_caf f')
 		  ->join('caf c','f.idcaf = c.id')
 		  ->join('tipo_caf tc','c.tipo_caf = tc.id')
@@ -296,7 +296,7 @@ class Facturaelectronica extends CI_Model
 	}	
 
 public function datos_dte_by_trackid($trackid){
-		$this->db->select('f.id, f.folio, f.path_dte, f.archivo_dte, f.dte, f.pdf, f.pdf_cedible, f.trackid, c.tipo_caf, tc.nombre as tipo_doc, cae.nombre as giro, cp.nombre as cond_pago, v.nombre as vendedor    ')
+		$this->db->select('f.id, f.folio, f.path_dte, f.archivo_dte, f.dte, f.dte_cliente, f.consumo_folios, f.pdf, f.pdf_cedible, f.trackid, c.tipo_caf, tc.nombre as tipo_doc, cae.nombre as giro, cp.nombre as cond_pago, v.nombre as vendedor    ')
 		  ->from('folios_caf f')
 		  ->join('caf c','f.idcaf = c.id')
 		  ->join('tipo_caf tc','c.tipo_caf = tc.id')
@@ -394,6 +394,8 @@ public function datos_dte_by_trackid($trackid){
 	 	}else if($tipo_consulta == 'trackid'){
 	 		$factura = $this->datos_dte_by_trackid($idfactura);
 	 	}
+
+
 
 	 	$nombre_pdf = is_null($cedible) ? $factura->pdf : $factura->pdf_cedible;
 
@@ -1193,5 +1195,77 @@ public function datos_dte_by_trackid($trackid){
 		$this->db->trans_complete(); 		
 
 	}	 
+
+
+	public function envio_sii($idfactura = null){
+		//$idfactura = is_null($idfactura) ? $this->input->post('idfactura') :  $idfactura;
+		$this->load->model('facturaelectronica');
+		$factura = $this->facturaelectronica->datos_dte($idfactura);
+		$config = $this->facturaelectronica->genera_config();
+		include_once $this->facturaelectronica->ruta_libredte();
+
+
+		$token = \sasco\LibreDTE\Sii\Autenticacion::getToken($config['firma']);
+		if (!$token) {
+		    foreach (\sasco\LibreDTE\Log::readAll() as $error){
+		    	$result['error'] = true;
+
+		    }
+		    $result['message'] = "Error de conexión con SII";		   
+		    return $result;
+		    exit;
+		}
+
+		$Firma = new \sasco\LibreDTE\FirmaElectronica($config['firma']); //lectura de certificado digital
+		$rut = $Firma->getId(); 
+		$rut_consultante = explode("-",$rut);
+		$RutEnvia = $rut_consultante[0]."-".$rut_consultante[1];
+
+
+		$xml = $factura->tipo_caf == 39 ? $factura->consumo_folios : $factura->dte;
+
+		$EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
+		$EnvioDte->loadXML($xml);
+		$Documentos = $EnvioDte->getDocumentos();	
+
+		$DTE = $Documentos[0];
+		$RutEmisor = $DTE->getEmisor(); 
+
+		// enviar DTE
+		$result_envio = \sasco\LibreDTE\Sii::enviar($RutEnvia, $RutEmisor, $xml, $token);
+
+		// si hubo algún error al enviar al servidor mostrar
+		if ($result_envio===false) {
+		    foreach (\sasco\LibreDTE\Log::readAll() as $error){
+		        $result['error'] = true;
+		    }
+		    $result['message'] = "Error de envío de DTE";		   
+		   	return $result;
+		    exit;
+		}
+
+		// Mostrar resultado del envío
+		if ($result_envio->STATUS!='0') {
+		    foreach (\sasco\LibreDTE\Log::readAll() as $error){
+				$result['error'] = true;
+		    }
+		    $result['message'] = "Error de envío de DTE";		   
+		   	return $result;
+		    exit;
+		}
+
+
+		$track_id = 0;
+		$track_id = (int)$result_envio->TRACKID;
+	    $this->db->where('id', $factura->id);
+		$this->db->update('folios_caf',array('trackid' => $track_id)); 
+
+
+		$result['success'] = true;
+		$result['message'] = $track_id != 0 ? "DTE enviado correctamente" : "Error en env&iacute;o de DTE";
+		$result['trackid'] = $track_id;
+		return $result;
+	}	
+
 
 }

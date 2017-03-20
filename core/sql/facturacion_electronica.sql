@@ -426,3 +426,8 @@ ALTER TABLE `folios_caf`
 	ADD COLUMN `consumo_folios` TEXT NOT NULL AFTER `dte_cliente`;
 ALTER TABLE `folios_caf`
 	ADD COLUMN `archivo_consumo_folios` VARCHAR(50) NOT NULL AFTER `archivo_dte_cliente`;	
+
+ALTER TABLE `preventa`
+	ADD COLUMN `id_pago` INT(11) NOT NULL AFTER `id_tip_docu`;	
+ALTER TABLE `existencia`
+	ADD COLUMN `id_bodega` INT(11) NOT NULL AFTER `stock`;	

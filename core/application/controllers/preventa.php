@@ -1137,6 +1137,7 @@ class Preventa extends CI_Controller {
 	        $tipo2 = 101; // FACTURA ELECTRONICA
 	        $tipo3 = 103; // FACTURA EXENTA ELECTRONICA        
 	        $tipo4 = 105; // GUIA DE DESPACHO ELECTRONICA
+	        $tipo6 = 106; // BOLETA ELECTRONICA
 
 	    };
 
@@ -1150,7 +1151,7 @@ class Preventa extends CI_Controller {
 			left join clientes c on (acc.id_cliente = c.id)
 			left join vendedores v on (acc.id_vendedor = v.id)
 			left join correlativos co on (acc.id_tip_docu = co.id)
-			WHERE acc.id_tip_docu in ('.$tipo5.','.$tipo.',' .$tipo2.',' .$tipo3.',' .$tipo4.') and c.rut = "'.$nombres.'" and acc.estado = "'.$estado.'"
+			WHERE acc.id_tip_docu in ('.$tipo5.','.$tipo.',' .$tipo2.',' .$tipo3.',' .$tipo4.',' .$tipo6.') and c.rut = "'.$nombres.'" and acc.estado = "'.$estado.'"
 			order by acc.id desc'		 
 
 		);
@@ -1180,7 +1181,7 @@ class Preventa extends CI_Controller {
 			left join clientes c on (acc.id_cliente = c.id)
 			left join vendedores v on (acc.id_vendedor = v.id)
 			left join correlativos co on (acc.id_tip_docu = co.id)
-			WHERE acc.id_tip_docu in ('.$tipo5.','.$tipo.',' .$tipo2.',' .$tipo3.',' .$tipo4.') ' . $sql_nombre . ' and acc.estado = "'.$estado.'"
+			WHERE acc.id_tip_docu in ('.$tipo5.','.$tipo.',' .$tipo2.',' .$tipo3.',' .$tipo4.',' .$tipo6.') ' . $sql_nombre . ' and acc.estado = "'.$estado.'"
 			order by acc.id desc'
 						
 			);
@@ -1203,7 +1204,7 @@ class Preventa extends CI_Controller {
 			left join clientes c on (acc.id_cliente = c.id)
 			left join vendedores v on (acc.id_vendedor = v.id)
 			left join correlativos co on (acc.id_tip_docu = co.id)
-			WHERE acc.id_tip_docu in ('.$tipo5.','.$tipo.',' .$tipo2.',' .$tipo3.',' .$tipo4.') and acc.estado = "'.$estado.'"
+			WHERE acc.id_tip_docu in ('.$tipo5.','.$tipo.',' .$tipo2.',' .$tipo3.',' .$tipo4.',' .$tipo6.') and acc.estado = "'.$estado.'"
 			order by acc.id desc
 			limit '.$start.', '.$limit.''	
 			
@@ -1229,7 +1230,7 @@ class Preventa extends CI_Controller {
 			left join clientes c on (acc.id_cliente = c.id)
 			left join vendedores v on (acc.id_vendedor = v.id)
 			left join correlativos co on (acc.id_tip_docu = co.id)
-			WHERE acc.id_tip_docu in ('.$tipo5.','.$tipo.',' .$tipo2.',' .$tipo3.',' .$tipo4.') and acc.num_ticket = "'.$nombres.'"
+			WHERE acc.id_tip_docu in ('.$tipo5.','.$tipo.',' .$tipo2.',' .$tipo3.',' .$tipo4.',' .$tipo6.') and acc.num_ticket = "'.$nombres.'"
 			and acc.estado = "'.$estado.'"
 			order by acc.id desc'	
 			
@@ -1255,7 +1256,7 @@ class Preventa extends CI_Controller {
 			left join clientes c on (acc.id_cliente = c.id)
 			left join vendedores v on (acc.id_vendedor = v.id)
 			left join correlativos co on (acc.id_tip_docu = co.id)
-			WHERE acc.id_tip_docu in ('.$tipo5.','.$tipo.',' .$tipo2.',' .$tipo3.',' .$tipo4.') and acc.estado = "'.$estado.'" 
+			WHERE acc.id_tip_docu in ('.$tipo5.','.$tipo.',' .$tipo2.',' .$tipo3.',' .$tipo4.',' .$tipo6.') and acc.estado = "'.$estado.'" 
 			order by acc.id desc'	
 
 			);

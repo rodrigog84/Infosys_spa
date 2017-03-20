@@ -431,3 +431,58 @@ ALTER TABLE `preventa`
 	ADD COLUMN `id_pago` INT(11) NOT NULL AFTER `id_tip_docu`;	
 ALTER TABLE `existencia`
 	ADD COLUMN `id_bodega` INT(11) NOT NULL AFTER `stock`;	
+
+/****************************************************************************************/
+
+ALTER TABLE `preventa`
+	ADD COLUMN `id_observa` INT(11) NOT NULL AFTER `observaciones`;
+
+CREATE TABLE `observacion_preventa` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`id_documento` INT(11) NOT NULL,
+	`rut` VARCHAR(9) NOT NULL,
+	`nombre` VARCHAR(30) NOT NULL,
+	`pat_camion` VARCHAR(10) NOT NULL,
+	`pat_carro` VARCHAR(10) NOT NULL,
+	`fono` VARCHAR(10) NOT NULL,
+	`observacion` TEXT NOT NULL,
+	PRIMARY KEY (`id`)
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+;
+
+
+CREATE TABLE `recaudacion_general` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`id_recaudacion` INT(11) NOT NULL,
+	`id_forma` INT(11) NOT NULL,
+	`contado` INT(10) NOT NULL,
+	`chequealdia` INT(10) NOT NULL,
+	`chequeafecha` INT(10) NOT NULL,
+	`credito` INT(10) NOT NULL,
+	`tarjetadebito` INT(10) NOT NULL,
+	`tarjetacredito` INT(10) NOT NULL,
+	`transferencia` INT(10) NOT NULL,
+	`credito30dias` INT(10) NOT NULL,
+	`credito60dias` INT(10) NOT NULL,
+	`num_documento` INT(10) NOT NULL,
+	`id_caja` INT(11) NOT NULL,
+	`id_cajero` INT(11) NOT NULL,
+	`fecha` DATE NOT NULL,
+	`estado` VARCHAR(3) NOT NULL,
+	PRIMARY KEY (`id`)
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+;
+ 
+
+ INSERT INTO `correlativos` (`id`, `nombre`, `correlativo`) VALUES (20, 'TARJETAS DE CREDITO', 3751);
+INSERT INTO `correlativos` (`id`, `nombre`, `correlativo`) VALUES (22, 'RECEPCIONES', 211);
+INSERT INTO `correlativos` (`id`, `nombre`, `correlativo`) VALUES (24, 'DEVOLUCIONES', 0);
+INSERT INTO `correlativos` (`id`, `nombre`, `correlativo`) VALUES (101, 'FACTURA ELECTRONICA', 6752);
+INSERT INTO `correlativos` (`id`, `nombre`, `correlativo`) VALUES (102, 'NOTA DE CREDITO ELECTRONICA', 165);
+INSERT INTO `correlativos` (`id`, `nombre`, `correlativo`) VALUES (103, 'FACTURA EXENTA ELECTRONICA', 0);
+INSERT INTO `correlativos` (`id`, `nombre`, `correlativo`) VALUES (105, 'GUIA DE DESPACHO ELECTRONICA', 84);
+INSERT INTO `correlativos` (`id`, `nombre`, `correlativo`) VALUES (106, 'BOLETA ELECTRONICA', 0);

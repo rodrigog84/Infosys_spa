@@ -1161,7 +1161,7 @@ cargar_listado_contribuyentes: function(){
           st.proxy.extraParams = {nombre : nombre};
           st.load();
        }else {
-          Ext.Msg.alert('Alerta', 'Debe seleccionar ClienteS.');
+          Ext.Msg.alert('Alerta', 'Debe seleccionar Cliente.');
             return;
        }
       
@@ -1369,7 +1369,7 @@ cargar_listado_contribuyentes: function(){
         
         var nombre = (record.id);    
         habilita = false;
-        if(nombre == 101 || nombre == 103 || nombre == 105){ // FACTURA ELECTRONICA o FACTURA EXENTA
+        if(nombre == 101 || nombre == 103 || nombre == 105 || nombre == 106){ // FACTURA ELECTRONICA o FACTURA EXENTA o BOLETA ELECTRONICA
 
             // se valida que exista certificado
             response_certificado = Ext.Ajax.request({
@@ -1539,7 +1539,7 @@ cargar_listado_contribuyentes: function(){
                         view.down("#buscarproc").focus()  
                                              
                     }else{
-                         Ext.Msg.alert('Rut No Exite');
+                         Ext.Msg.alert('Informacion','Rut No Existe');
                          view.down("#rutId").setValue(cero); 
                         return;   
                     }

@@ -413,3 +413,16 @@ CREATE TABLE `recepcion_compra` (
 COLLATE='latin1_swedish_ci'
 ENGINE=InnoDB
 ;
+
+
+/***********************************************************************************/
+
+INSERT INTO `tipo_documento` (`id`, `descripcion`, `correlativo`) VALUES ('106', 'BOLETA ELECTRONICA', '0');
+INSERT INTO `tipo_caf` (`id`, `nombre`) VALUES ('39', 'Boleta Electrónica');
+ALTER TABLE `empresa`
+	ADD COLUMN `url` VARCHAR(50) NULL DEFAULT NULL AFTER `nro_resolucion`;
+UPDATE `empresa` SET `url`='angus.agricultorestalca.cl' WHERE  `id`=1;	
+ALTER TABLE `folios_caf`
+	ADD COLUMN `consumo_folios` TEXT NOT NULL AFTER `dte_cliente`;
+ALTER TABLE `folios_caf`
+	ADD COLUMN `archivo_consumo_folios` VARCHAR(50) NOT NULL AFTER `archivo_dte_cliente`;	

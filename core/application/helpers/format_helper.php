@@ -412,12 +412,40 @@ if (!function_exists('caftotd'))
         $tipodocumento = 104;
       }else if($caf == 52){
         $tipodocumento = 105;
+      }else{
+        $tipodocumento = 0;
       }
     return $tipodocumento;
   }
 
 }
 
+
+if (!function_exists('tdtocaf'))
+{
+
+  function tdtocaf($tipo_doc)
+  {
+
+    if($tipo_doc == 101){
+      $tipo_caf = 33;
+    }else if($tipo_doc == 102){
+      $tipo_caf = 61;
+    }else if($tipo_doc == 103){
+      $tipo_caf = 34;
+    }else if($tipo_doc == 104){
+      $tipo_caf = 56;
+    }else if($tipo_doc == 105){
+      $tipo_caf = 52;
+    }else if($tipo_doc == 106){
+      $tipo_caf = 39;
+    }
+
+
+    return $tipo_caf;
+  }
+
+}
            
 
       

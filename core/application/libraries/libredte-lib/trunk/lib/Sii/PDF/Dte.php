@@ -116,6 +116,11 @@ class Dte extends \sasco\LibreDTE\PDF
     }
 
 
+    public function setWebVerifica($url)
+    {
+        $this->web_verificacion = $url;
+    }
+
     public function setGiroCliente($giro)
     {
         $this->giroCliente = $giro;

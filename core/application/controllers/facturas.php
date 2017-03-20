@@ -1788,48 +1788,24 @@ public function cargacontribuyentes(){
 
 	public function folio_documento_electronico($tipo_doc){
 
+
+		$this->db->trans_start();
 		$tipo_caf = 0;
-		if($tipo_doc == 101){
-			$tipo_caf = 33;
-		}else if($tipo_doc == 102){
-			$tipo_caf = 61;
-		}else if($tipo_doc == 103){
-			$tipo_caf = 34;
-		}else if($tipo_doc == 104){
-			$tipo_caf = 56;
-		}else if($tipo_doc == 105){
-			$tipo_caf = 52;
-		}
+
+		$tipo_caf = tdtocaf($tipo_doc);
 
 		$nuevo_folio = 0;
-		//buscar primero si existe algún folio ocupado hace más de 4 horas.
-		$this->db->select('fc.id, fc.folio ')
-		  ->from('folios_caf fc')
-		  ->join('caf c','fc.idcaf = c.id')
-		  ->where('c.tipo_caf',$tipo_caf)
-		  ->where('fc.estado','T')
-		  ->where('fc.updated_at <= (now() - interval 4 hour)')
-		  ->order_by('fc.folio')
-		  ->limit(1);
-		$query = $this->db->get();
+
+		$query = $this->db->query('select fc.id, fc.folio from folios_caf 
+						fc inner join caf c on fc.idcaf = c.id
+						where c.tipo_caf = ' . $tipo_caf . '
+						and fc.estado = "P"
+						order by fc.folio limit 1 for update');
+
 		$folios_caf = $query->row();	
 		if(count($folios_caf) > 0){
 			$nuevo_folio = $folios_caf->folio;
 			$id_folio = $folios_caf->id;
-		}else{ // buscar folios pendientes
-			$this->db->select('fc.id, fc.folio ')
-			  ->from('folios_caf fc')
-			  ->join('caf c','fc.idcaf = c.id')
-			  ->where('c.tipo_caf',$tipo_caf)
-			  ->where('fc.estado','P')
-			  ->order_by('fc.folio')
-			  ->limit(1);
-			$query = $this->db->get();
-			$folios_caf = $query->row();	
-			if(count($folios_caf) > 0){
-				$nuevo_folio = $folios_caf->folio;
-				$id_folio = $folios_caf->id;
-			}
 		}
 
 
@@ -1841,7 +1817,9 @@ public function cargacontribuyentes(){
 		}
 
        	$resp['folio'] = $nuevo_folio;
+       	$this->db->trans_complete();
    		echo json_encode($resp);
+
 	 }
 
 	 public function exportFePDF($idfactura,$cedible = null){
@@ -3026,16 +3004,17 @@ public function cargacontribuyentes(){
 
 		/*****************************************/
 
-		if($tipodocumento == 101 || $tipodocumento == 103 || $tipodocumento == 105){  // SI ES FACTURA ELECTRONICA O FACTURA EXENTA ELECTRONICA
+		if($tipodocumento == 101 || $tipodocumento == 103 || $tipodocumento == 105 || $tipodocumento == 106){  // SI ES FACTURA ELECTRONICA O FACTURA EXENTA ELECTRONICA
 
 
-			if($tipodocumento == 101){
+			$tipo_caf = tdtocaf($tipodocumento);
+			/*if($tipodocumento == 101){
 				$tipo_caf = 33;
 			}else if($tipodocumento == 103){
 				$tipo_caf = 34;
 			}else if($tipodocumento == 105){
 				$tipo_caf = 52;
-			}
+			}*/
 
 
 			//$tipo_caf = $tipodocumento == 101 ? 33 : 34;
@@ -3082,6 +3061,19 @@ public function cargacontribuyentes(){
 			}
 
 			$rutCliente = substr($datos_empresa_factura->rut_cliente,0,strlen($datos_empresa_factura->rut_cliente) - 1)."-".substr($datos_empresa_factura->rut_cliente,-1);
+
+
+			if($tipodocumento == 106){
+				$totales = array();
+			}else{
+
+				$totales = array(
+		                'MntNeto' => isset($datos_factura->neto) ? $datos_factura->neto : 0,
+		                'TasaIVA' => \sasco\LibreDTE\Sii::getIVA(),
+		                'IVA' => isset($datos_factura->iva) ? $datos_factura->iva : 0,
+		                'MntTotal' => isset($datos_factura->totalfactura) ? $datos_factura->totalfactura : 0);			
+			}
+
 			// datos
 			$factura = [
 			    'Encabezado' => [
@@ -3105,18 +3097,12 @@ public function cargacontribuyentes(){
 			            'DirRecep' => substr($datos_empresa_factura->direccion,0,70), //LARGO DE DIRECCION NO PUEDE SER SUPERIOR A 70 CARACTERES
 			            'CmnaRecep' => substr($datos_empresa_factura->nombre_comuna,0,20), //LARGO DE COMUNA NO PUEDE SER SUPERIOR A 20 CARACTERES
 			        ],
-		            'Totales' => [
-		                // estos valores serán calculados automáticamente
-		                'MntNeto' => isset($datos_factura->neto) ? $datos_factura->neto : 0,
-		                'TasaIVA' => \sasco\LibreDTE\Sii::getIVA(),
-		                'IVA' => isset($datos_factura->iva) ? $datos_factura->iva : 0,
-		                'MntTotal' => isset($datos_factura->totalfactura) ? $datos_factura->totalfactura : 0,
-		            ],				        
+		            'Totales' => $totales,				        
 			    ],
 				'Detalle' => $lista_detalle
 			];
 
-			//var_dump($factura); exit;
+			#print_r($factura);# exit;
 
 			//FchResol y NroResol deben cambiar con los datos reales de producción
 			$caratula = [
@@ -3152,8 +3138,8 @@ public function cargacontribuyentes(){
 			$EnvioDTE->agregar($DTE);
 			$EnvioDTE->setFirma($Firma);
 			$EnvioDTE->setCaratula($caratula);
+			#print_r($EnvioDTE->generar()); exit;
 			$EnvioDTE->generar();
-
 			if ($EnvioDTE->schemaValidate()) { // REVISAR PORQUÉ SE CAE CON ESTA VALIDACION
 				
 				$track_id = 0;
@@ -3172,20 +3158,33 @@ public function cargacontribuyentes(){
 			    $dte = $this->facturaelectronica->crea_archivo_dte($xml_dte,$idfactura,$tipo_caf,'sii');
 			    $dte_cliente = $this->facturaelectronica->crea_archivo_dte($xml_dte_cliente,$idfactura,$tipo_caf,'cliente');
 
+				#CONSUMO DE FOLIOS			    
+				$consumo_folios = array("xml" => "",
+					 "archivo" => "");
+		    	if($tipo_caf == 39){
+		    		$consumo_folios = $this->facturaelectronica->consumoFolios($xml_dte,$idfactura,$tipo_caf);
+		    	}
 
 			    if($tipo_envio == 'automatico'){
-				    $track_id = $EnvioDTE->enviar();
+			    	if($tipo_caf == 39){
+			    		#$this->facturaelectronica->consumoFolios($EnvioDTE,$idfactura,$tipo_caf);
+			    	}else{
+			    		$track_id = $EnvioDTE->enviar();	
+			    	}
+				    
 			    }
 
 			    $this->db->where('f.folio', $numfactura);
 			    $this->db->where('c.tipo_caf', $tipo_caf);
 				$this->db->update('folios_caf f inner join caf c on f.idcaf = c.id',array('dte' => $dte['xml_dte'],
 																						  'dte_cliente' => $dte_cliente['xml_dte'],
+																						  'consumo_folios' => $consumo_folios['xml'],
 																						  'estado' => 'O',
 																						  'idfactura' => $idfactura,
 																						  'path_dte' => $dte['path'],
 																						  'archivo_dte' => $dte['nombre_dte'],
 																						  'archivo_dte_cliente' => $dte_cliente['nombre_dte'],
+																						  'archivo_consumo_folios' => $consumo_folios['archivo'],
 																						  'trackid' => $track_id
 																						  )); 
 
@@ -3220,8 +3219,9 @@ public function cargacontribuyentes(){
 		if($tipodocumento == 1){
 				$this->exportFacturaPDF($idfactura,$numero);
 
-		}else if($tipodocumento ==  101 || $tipodocumento == 103 || $tipodocumento == 105){ // FACTURA ELECTRONICA O FACTURA EXENTA ELECTRONCA O GUIA DE DESPACHO
+		}else if($tipodocumento ==  101 || $tipodocumento == 103 || $tipodocumento == 105 || $tipodocumento == 106){ // FACTURA ELECTRONICA O FACTURA EXENTA ELECTRONCA O GUIA DE DESPACHO O BOLETA
 				//$es_cedible = is_null($cedible) ? false : true;
+
 				$this->load->model('facturaelectronica');
 				$this->facturaelectronica->exportFePDF($idfactura,'id');
 

@@ -126,7 +126,7 @@ class Facturaelectronica extends CI_Model
 	 }
 
 	public function get_empresa(){
-		$this->db->select('rut, dv, razon_social, giro, cod_actividad, dir_origen, comuna_origen, fec_resolucion, nro_resolucion, logo ')
+		$this->db->select('rut, dv, razon_social, giro, cod_actividad, dir_origen, comuna_origen, fec_resolucion, nro_resolucion, logo, url ')
 		  ->from('empresa')
 		  ->limit(1);
 		$query = $this->db->get();
@@ -324,6 +324,68 @@ public function datos_dte_by_trackid($trackid){
 	}
 
 
+
+	public function consumoFolios($xml_boleta,$idfactura,$tipo_caf){
+
+		$config = $this->facturaelectronica->genera_config();
+		include_once $this->facturaelectronica->ruta_libredte();
+
+		$datos_factura = $this->get_factura($idfactura);
+
+		// cargar XML boletas y notas
+		$EnvioBOLETA = new \sasco\LibreDTE\Sii\EnvioDte();
+		$EnvioBOLETA->loadXML($xml_boleta);
+
+		$ConsumoFolio = new \sasco\LibreDTE\Sii\ConsumoFolio();
+		$ConsumoFolio->setFirma(new \sasco\LibreDTE\FirmaElectronica($config['firma']));
+
+		// agregar detalle de boletas
+		foreach ($EnvioBOLETA->getDocumentos() as $Dte) {
+			#var_dump($Dte->getResumen());
+		    $ConsumoFolio->agregar($Dte->getResumen());
+		}
+
+		// crear carátula para el envío (se hace después de agregar los detalles ya que
+		// así se obtiene automáticamente la fecha inicial y final de los documentos)
+		$CaratulaEnvioBOLETA = $EnvioBOLETA->getCaratula();
+
+		$ConsumoFolio->setCaratula([
+		    'RutEmisor' => $CaratulaEnvioBOLETA['RutEmisor'],
+		    'FchResol' => $CaratulaEnvioBOLETA['FchResol'],
+		    'NroResol' => $CaratulaEnvioBOLETA['NroResol'],
+		]);
+
+		// generar, validar schema y mostrar XML
+		$ConsumoFolio->generar();
+		$xml_consumo_folios = "";
+		$nombre_dte = "";
+		if ($ConsumoFolio->schemaValidate()) {
+		    $xml_consumo_folios =  $ConsumoFolio->generar();
+
+			$file_name = "CLI_";
+			$nombre_dte = $datos_factura->num_factura."_". $tipo_caf ."_".$idfactura."_".$file_name.date("His").".xml"; // nombre archivo
+			$ruta = 'consumo_folios';
+			$path = date('Ym').'/'; // ruta guardado
+			if(!file_exists('./facturacion_electronica/' . $ruta . '/'.$path)){
+				mkdir('./facturacion_electronica/' . $ruta . '/'.$path,0777,true);
+			}				
+			$f_archivo = fopen('./facturacion_electronica/' . $ruta .'/'.$path.$nombre_dte,'w');
+			fwrite($f_archivo,$xml_consumo_folios);
+			fclose($f_archivo);
+
+
+
+		    #file_put_contents('xml/infosys/Consumo_folios.xml',$ConsumoFolio->generar()); 
+		    //$track_id = $ConsumoFolio->enviar();
+		    //var_dump($track_id);
+		}
+
+		return array("xml" => $xml_consumo_folios,
+					 "archivo" => $nombre_dte);
+
+	}
+
+
 	 public function exportFePDF($idfactura,$tipo_consulta,$cedible = null){
 
 	 	include $this->ruta_libredte();
@@ -332,6 +394,7 @@ public function datos_dte_by_trackid($trackid){
 	 	}else if($tipo_consulta == 'trackid'){
 	 		$factura = $this->datos_dte_by_trackid($idfactura);
 	 	}
+
 	 	$nombre_pdf = is_null($cedible) ? $factura->pdf : $factura->pdf_cedible;
 
 	 	//file_exists 
@@ -391,6 +454,11 @@ public function datos_dte_by_trackid($trackid){
 			    /*if(!is_null($cedible)){
 			    	$pdf->setCedible(true);
 			    }*/
+
+			    if($factura->tipo_caf == 39){ #BOLETA ELECTRÓNICA
+			    	$pdf->setWebVerifica($empresa->url);
+			    }
+
 			    $pdf->agregar($DTE->getDatos(), $DTE->getTED());
 			    if($factura->tipo_caf == 33 || $factura->tipo_caf == 34 || $factura->tipo_caf == 52){
 				    $pdf->setCedible(true);

@@ -267,7 +267,7 @@ class Facturaelectronica extends CI_Model
 
 	public function datos_dte($idfactura){
 
-		$this->db->select('f.id, f.folio, f.path_dte, f.archivo_dte,  f.archivo_dte_cliente, f.dte, f.dte_cliente, f.consumo_folios, f.pdf, f.pdf_cedible, f.trackid, c.tipo_caf, tc.nombre as tipo_doc, cae.nombre as giro, cp.nombre as cond_pago, v.nombre as vendedor ')
+		$this->db->select('f.id, f.folio, f.path_dte, f.archivo_dte,  f.archivo_dte_cliente, f.archivo_consumo_folios, f.dte, f.dte_cliente, f.consumo_folios, f.pdf, f.pdf_cedible, f.trackid, c.tipo_caf, tc.nombre as tipo_doc, cae.nombre as giro, cp.nombre as cond_pago, v.nombre as vendedor ')
 		  ->from('folios_caf f')
 		  ->join('caf c','f.idcaf = c.id')
 		  ->join('tipo_caf tc','c.tipo_caf = tc.id')
@@ -296,7 +296,7 @@ class Facturaelectronica extends CI_Model
 	}	
 
 public function datos_dte_by_trackid($trackid){
-		$this->db->select('f.id, f.folio, f.path_dte, f.archivo_dte, f.dte, f.dte_cliente, f.consumo_folios, f.pdf, f.pdf_cedible, f.trackid, c.tipo_caf, tc.nombre as tipo_doc, cae.nombre as giro, cp.nombre as cond_pago, v.nombre as vendedor    ')
+		$this->db->select('f.id, f.folio, f.path_dte, f.archivo_dte, f.archivo_consumo_folios, f.dte, f.dte_cliente, f.consumo_folios, f.pdf, f.pdf_cedible, f.trackid, c.tipo_caf, tc.nombre as tipo_doc, cae.nombre as giro, cp.nombre as cond_pago, v.nombre as vendedor    ')
 		  ->from('folios_caf f')
 		  ->join('caf c','f.idcaf = c.id')
 		  ->join('tipo_caf tc','c.tipo_caf = tc.id')
@@ -323,6 +323,37 @@ public function datos_dte_by_trackid($trackid){
 		return $query->row();
 	}
 
+
+
+
+	public function crea_consumo_folios($idfactura){
+
+
+		$tipo_caf = 39;
+		$dte = $this->facturaelectronica->datos_dte($idfactura);
+		if(empty($dte)){
+			$dte = $this->facturaelectronica->crea_dte($idfactura);				
+		}else{
+			if($dte->dte == ''){
+				$dte = $this->facturaelectronica->crea_dte($idfactura);
+			}
+		}
+
+		$xml_boleta = $dte->dte;
+		$consumo_folios = $this->facturaelectronica->consumoFolios($xml_boleta,$idfactura,$tipo_caf);
+
+		$array_update = array(
+																				  'consumo_folios' => $consumo_folios['xml'],
+																				  'archivo_consumo_folios' => $consumo_folios['archivo']
+																				  );    	
+
+
+	    $this->db->where('f.folio', $dte->folio);
+	    $this->db->where('c.tipo_caf', $tipo_caf);
+		$this->db->update('folios_caf f inner join caf c on f.idcaf = c.id',$array_update); 
+
+		return $this->datos_dte($idfactura);
+	}
 
 
 	public function consumoFolios($xml_boleta,$idfactura,$tipo_caf){
@@ -362,7 +393,7 @@ public function datos_dte_by_trackid($trackid){
 		if ($ConsumoFolio->schemaValidate()) {
 		    $xml_consumo_folios =  $ConsumoFolio->generar();
 
-			$file_name = "CLI_";
+			$file_name = "CON_";
 			$nombre_dte = $datos_factura->num_factura."_". $tipo_caf ."_".$idfactura."_".$file_name.date("His").".xml"; // nombre archivo
 			$ruta = 'consumo_folios';
 			$path = date('Ym').'/'; // ruta guardado
@@ -927,7 +958,7 @@ public function datos_dte_by_trackid($trackid){
 		$tipodocumento = $data_factura->tipo_documento;
 		$numfactura = $data_factura->num_factura;
 		$fecemision = $data_factura->fecha_factura;
-		if($tipodocumento == 101){
+		/*if($tipodocumento == 101){
 			$tipo_caf = 33;
 		}else if($tipodocumento == 103){
 			$tipo_caf = 34;
@@ -935,7 +966,10 @@ public function datos_dte_by_trackid($trackid){
 			$tipo_caf = 52;
 		}else if($tipodocumento == 102){
 			$tipo_caf = 61;
-		}		
+		}		*/
+
+
+		$tipo_caf = tdtocaf($tipodocumento);
 
 		header('Content-type: text/plain; charset=ISO-8859-1');
 		$this->load->model('facturaelectronica');

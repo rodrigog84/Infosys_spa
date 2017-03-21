@@ -464,7 +464,10 @@ cargar_listado_contribuyentes: function(){
              window.open(url,'_blank');   
          }else if(t == 6){
             Ext.create('Infosys_web.view.facturaelectronica.verEstadoEnvioLibro', {idlibro: r.data.id});                          
-        }         
+        }else if(t == 7){
+             url = preurl + 'facturas/ver_dte/'+r.data.id+'/consumo_folios',
+             window.open(url,'_blank');   
+         }         
     },
 
 

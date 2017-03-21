@@ -929,21 +929,48 @@ class Facturas extends CI_Controller {
 
 	public function ver_dte($idfactura,$tipo = 'sii'){
 
-		$ruta = $tipo == 'cliente' ? 'dte_cliente' : 'dte';
+		if($tipo == 'cliente'){
+			$ruta = 'dte_cliente';
+		}else if($tipo == 'sii'){
+			$ruta = 'dte';
+		}else if($tipo == 'consumo_folios'){
+			$ruta = 'consumo_folios';
+		}
+
+		#$ruta = $tipo == 'cliente' ? 'dte_cliente' : 'dte';
 		$this->load->model('facturaelectronica');
 		$dte = $this->facturaelectronica->datos_dte($idfactura);
 
 		if(empty($dte)){
-			$dte = $this->facturaelectronica->crea_dte($idfactura);
+
+			if($tipo == 'consumo_folios'){
+				$dte = $this->facturaelectronica->crea_consumo_folios($idfactura);	
+			}else{
+				$dte = $this->facturaelectronica->crea_dte($idfactura);	
+			}
+			
 		}else{
 
 		 	if($dte->{$ruta} == ''){
-				$dte = $this->facturaelectronica->crea_dte($idfactura,$tipo);
+				if($tipo == 'consumo_folios'){
+					$dte = $this->facturaelectronica->crea_consumo_folios($idfactura);	
+				}else{
+					$dte = $this->facturaelectronica->crea_dte($idfactura,$tipo);
+				}
 			}
 		}
 
 
-		$nombre_archivo = $tipo == 'cliente' ? $dte->archivo_dte_cliente : $dte->archivo_dte;
+		#$nombre_archivo = $tipo == 'cliente' ? $dte->archivo_dte_cliente : $dte->archivo_dte;
+
+		if($tipo == 'cliente'){
+			$nombre_archivo = $dte->archivo_dte_cliente;
+		}else if($tipo == 'sii'){
+			$nombre_archivo = $dte->archivo_dte;
+		}else if($tipo == 'consumo_folios'){
+			$nombre_archivo = $dte->archivo_consumo_folios;
+		}
+
  		$path_archivo = "./facturacion_electronica/" . $ruta . "/".$dte->path_dte;
  		$data_archivo = basename($path_archivo.$nombre_archivo);
 

@@ -43,7 +43,7 @@ Ext.define('Infosys_web.view.ventas.Principalfactura' ,{
     },{
         header: "Tipo Documento",
         dataIndex: 'tipo_doc',
-        width:280,
+        width:260,
         align: 'left'
                
     },{
@@ -132,7 +132,7 @@ Ext.define('Infosys_web.view.ventas.Principalfactura' ,{
                 },
                 isDisabled: function(view, rowIndex, colIndex, item, record) {
                     // Returns true if 'editable' is false (, null, or undefined)
-                    if(record.get('tipo_documento') == 101 || record.get('tipo_documento') == 103 || record.get('tipo_documento') == 105){
+                    if(record.get('tipo_documento') == 101 || record.get('tipo_documento') == 103 || record.get('tipo_documento') == 105 || record.get('tipo_documento') == 106){
                         return false;
                     }else{
                         return true;
@@ -155,7 +155,7 @@ Ext.define('Infosys_web.view.ventas.Principalfactura' ,{
                 },
                 isDisabled: function(view, rowIndex, colIndex, item, record) {
                     // Returns true if 'editable' is false (, null, or undefined)
-                    if(record.get('tipo_documento') == 101 || record.get('tipo_documento') == 103 || record.get('tipo_documento') == 105){
+                    if(record.get('tipo_documento') == 101 || record.get('tipo_documento') == 103 || record.get('tipo_documento') == 105 || record.get('tipo_documento') == 106){
                         return false;
                     }else{
                         return true;
@@ -178,7 +178,30 @@ Ext.define('Infosys_web.view.ventas.Principalfactura' ,{
                 },
                 isDisabled: function(view, rowIndex, colIndex, item, record) {
                     // Returns true if 'editable' is false (, null, or undefined)
-                    if(record.get('tipo_documento') == 101 || record.get('tipo_documento') == 103 || record.get('tipo_documento') == 105){
+                    if(record.get('tipo_documento') == 101 || record.get('tipo_documento') == 103 || record.get('tipo_documento') == 105 || record.get('tipo_documento') == 106){
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }                
+            }]
+    },{
+            header: "Consumo Folios",
+            xtype:'actioncolumn',
+            width:115,
+            align: 'center',
+            items: [{
+                icon: 'images/xml-icon.png',  // Use a URL in the icon config
+                tooltip: 'Descargar DTE',
+                handler: function(grid, rowIndex, colIndex) {
+                    var rec = grid.getStore().getAt(rowIndex);
+                    //salert("Edit " + rec.get('firstname'));
+                    var vista = this.up('facturasprincipal');
+                    vista.fireEvent('verEstadoDte',rec,7)
+                },
+                isDisabled: function(view, rowIndex, colIndex, item, record) {
+                    // Returns true if 'editable' is false (, null, or undefined)
+                    if(record.get('tipo_documento') == 106){
                         return false;
                     }else{
                         return true;
@@ -201,7 +224,7 @@ Ext.define('Infosys_web.view.ventas.Principalfactura' ,{
                 },
                 isDisabled: function(view, rowIndex, colIndex, item, record) {
                     // Returns true if 'editable' is false (, null, or undefined)
-                    if(record.get('tipo_documento') == 101 || record.get('tipo_documento') == 103 || record.get('tipo_documento') == 105){
+                    if(record.get('tipo_documento') == 101 || record.get('tipo_documento') == 103 || record.get('tipo_documento') == 105 || record.get('tipo_documento') == 106){
                         return false;
                     }else{
                         return true;

@@ -535,6 +535,12 @@ class Preventa extends CI_Controller {
 			
 		};
 
+		$this->load->model('facturaelectronica');
+		$empresa = $this->facturaelectronica->get_empresa();
+
+
+		$logo =  PATH_FILES."facturacion_electronica/images/".$empresa->logo; 
+
 		$html = '
 		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		<html xmlns="http://www.w3.org/1999/xhtml">
@@ -554,7 +560,7 @@ class Preventa extends CI_Controller {
 		<table width="987px" height="602" border="0">
 		    </td>
 		  <tr>
-		  <td width="197px"><img src="http://localhost/Deik/Infosys_web/resources/images/logo.jpg" width="150" height="136" /></td>
+		  <td width="197px"><img src="' . $logo . '" width="150" height="136" /></td>
 		    <td width="493px" style="font-size: 14px;text-align:center;vertical-align:text-top"	>
 		    <p>SOCIEDAD COMERCIAL DEIK Y CIA. LIMITADA</p>
 		    <p>RUT:76.019.353-4</p>

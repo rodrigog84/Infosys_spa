@@ -34,6 +34,7 @@ Ext.define('Infosys_web.view.facturaelectronica.RegistroEmpresa' ,{
             var comuna = obj_empresa.comuna_origen;
             var fec_resolucion = obj_empresa.fec_resolucion;
             var nro_resolucion = obj_empresa.nro_resolucion;
+            var url_verifica = obj_empresa.url;
             var logo = gbl_site + 'core/facturacion_electronica/images/' + obj_empresa.logo;
 
         }else{
@@ -45,6 +46,7 @@ Ext.define('Infosys_web.view.facturaelectronica.RegistroEmpresa' ,{
             var comuna = "";
             var fec_resolucion = "";
             var nro_resolucion = 0;
+            var url_verifica = "www.ejemplo.cl";
             var logo = gbl_site + 'core/facturacion_electronica/images/sinimagen.jpg';
 
         }
@@ -191,6 +193,26 @@ Ext.define('Infosys_web.view.facturaelectronica.RegistroEmpresa' ,{
                             fieldLabel : '&nbsp;&nbsp;Nro. Resoluci&oacute;n',
                             labelStyle: ' font-weight:bold',
                             value : nro_resolucion,
+                            allowBlank : false
+                   
+                            }
+                        ]
+                    },{
+                        xtype: 'fieldcontainer',
+                        fieldLabel: '',
+                        layout: {
+                            type: 'hbox',
+                            align: 'stretch'
+                        },
+                        items: [ 
+                            {
+                            xtype: 'textfield',
+                            name: 'url_verifica',
+                            itemId : 'url_verifica',
+                            fieldLabel : 'Url Verifica Boleta',
+                            labelStyle: ' font-weight:bold',
+                            value : url_verifica,
+                            labelWidth: 150,
                             allowBlank : false
                    
                             }

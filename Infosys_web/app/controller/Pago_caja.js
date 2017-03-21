@@ -477,6 +477,13 @@ Ext.define('Infosys_web.controller.Pago_caja', {
             var tipodocumento = 105;
         }
 
+
+        if (tipo_documento.getValue()== 106){
+            
+            var tipodocumento = 106;
+        }
+
+
         if(vendedor==0  && tipo_documento.getValue() == 1){
             Ext.Msg.alert('Ingrese Datos del Vendedor');
             return;   
@@ -1524,7 +1531,7 @@ Ext.define('Infosys_web.controller.Pago_caja', {
                         var afecto = (neto-desc);
                         var iva = (total-afecto);
 
-                        if(nombre == 101 || nombre == 103 || nombre == 105){ // FACTURA ELECTRONICA o FACTURA EXENTA
+                        if(nombre == 101 || nombre == 103 || nombre == 105 || nombre == 106){ // FACTURA ELECTRONICA o FACTURA EXENTA
 
                         // se valida que exista certificado
                         response_certificado = Ext.Ajax.request({
@@ -1715,7 +1722,7 @@ Ext.define('Infosys_web.controller.Pago_caja', {
 
                        var nombre = tipo_docu;
 
-                    if(nombre == 101 || nombre == 103 || nombre == 105){ // FACTURA ELECTRONICA o FACTURA EXENTA
+                    if(nombre == 101 || nombre == 103 || nombre == 105 || nombre == 106){ // FACTURA ELECTRONICA o FACTURA EXENTA
 
                         // se valida que exista certificado
                         response_certificado = Ext.Ajax.request({

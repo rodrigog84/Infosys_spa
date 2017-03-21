@@ -7,7 +7,7 @@ class Facturasvizualiza extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		
+		$this->load->helper('format');
 		$this->load->database();
 	}
 
@@ -435,7 +435,7 @@ class Facturasvizualiza extends CI_Controller {
 
 		if ($tipodocumento != 3 && $tipodocumento != 105){
 		/******* CUENTAS CORRIENTES ****/
-		 $nombre_cuenta = $tipodocumento == 2 ? "BOLETAS POR COBRAR" : "FACTURAS POR COBRAR";
+		 $nombre_cuenta = $tipodocumento == 2 || $tipodocumento == 106 ? "BOLETAS POR COBRAR" : "FACTURAS POR COBRAR";
 		 $query = $this->db->query("SELECT cc.id as idcuentacontable FROM cuenta_contable cc WHERE cc.nombre = '" . $nombre_cuenta . "'");
 		 $row = $query->result();
 		 $row = $row[0];
@@ -497,17 +497,18 @@ class Facturasvizualiza extends CI_Controller {
 		};
 
 
-		if($tipodocumento == 101 || $tipodocumento == 103 || $tipodocumento == 105){  // SI ES FACTURA ELECTRONICA O FACTURA EXENTA ELECTRONICA
+		if($tipodocumento == 101 || $tipodocumento == 103 || $tipodocumento == 105 || $tipodocumento == 106){  // SI ES FACTURA ELECTRONICA O FACTURA EXENTA ELECTRONICA
 
 
-			if($tipodocumento == 101){
+			/*if($tipodocumento == 101){
 				$tipo_caf = 33;
 			}else if($tipodocumento == 103){
 				$tipo_caf = 34;
 			}else if($tipodocumento == 105){
 				$tipo_caf = 52;
-			}
+			}*/
 
+			$tipo_caf = tdtocaf($tipodocumento);
 
 			//$tipo_caf = $tipodocumento == 101 ? 33 : 34;
 
@@ -554,6 +555,18 @@ class Facturasvizualiza extends CI_Controller {
 				$i++;
 			}
 
+			if($tipodocumento == 106){
+				$totales = array();
+			}else{
+
+				$totales = array(
+		                'MntNeto' => isset($datos_factura->neto) ? $datos_factura->neto : 0,
+		                'TasaIVA' => \sasco\LibreDTE\Sii::getIVA(),
+		                'IVA' => isset($datos_factura->iva) ? $datos_factura->iva : 0,
+		                'MntTotal' => isset($datos_factura->totalfactura) ? $datos_factura->totalfactura : 0);			
+			}
+
+
 
 			// datos
 			$factura = [
@@ -578,13 +591,7 @@ class Facturasvizualiza extends CI_Controller {
 			            'DirRecep' => substr($datos_empresa_factura->direccion,0,70), //LARGO DE DIRECCION NO PUEDE SER SUPERIOR A 70 CARACTERES
 			            'CmnaRecep' => substr($datos_empresa_factura->nombre_comuna,0,20), //LARGO DE COMUNA NO PUEDE SER SUPERIOR A 20 CARACTERES
 			        ],
-		            'Totales' => [
-		                // estos valores serán calculados automáticamente
-		                'MntNeto' => isset($datos_factura->neto) ? $datos_factura->neto : 0,
-		                'TasaIVA' => \sasco\LibreDTE\Sii::getIVA(),
-		                'IVA' => isset($datos_factura->iva) ? $datos_factura->iva : 0,
-		                'MntTotal' => isset($datos_factura->totalfactura) ? $datos_factura->totalfactura : 0,
-		            ],				        
+		            'Totales' => $totales,				        				        
 			    ],
 				'Detalle' => $lista_detalle
 			];
@@ -645,24 +652,39 @@ class Facturasvizualiza extends CI_Controller {
 			    $dte = $this->facturaelectronica->crea_archivo_dte($xml_dte,$idfactura,$tipo_caf,'sii');
 			    $dte_cliente = $this->facturaelectronica->crea_archivo_dte($xml_dte_cliente,$idfactura,$tipo_caf,'cliente');
 
+				#CONSUMO DE FOLIOS			    
+				$consumo_folios = array("xml" => "",
+					 "archivo" => "");
+		    	if($tipo_caf == 39){
+		    		$consumo_folios = $this->facturaelectronica->consumoFolios($xml_dte,$idfactura,$tipo_caf);
+		    	}
 
-
-			    if($tipo_envio == 'automatico'){
-				    $track_id = $EnvioDTE->enviar();
-			    }
-
-
-			    $this->db->where('f.folio', $numfactura);
-			    $this->db->where('c.tipo_caf', $tipo_caf);
-				$this->db->update('folios_caf f inner join caf c on f.idcaf = c.id',array('dte' => $dte['xml_dte'],
+				$array_update = array('dte' => $dte['xml_dte'],
 																						  'dte_cliente' => $dte_cliente['xml_dte'],
+																						  'consumo_folios' => $consumo_folios['xml'],
 																						  'estado' => 'O',
 																						  'idfactura' => $idfactura,
 																						  'path_dte' => $dte['path'],
 																						  'archivo_dte' => $dte['nombre_dte'],
 																						  'archivo_dte_cliente' => $dte_cliente['nombre_dte'],
-																						  'trackid' => $track_id
-																						  )); 
+																						  'archivo_consumo_folios' => $consumo_folios['archivo']
+																						  );	    	
+
+
+			    if($tipo_envio == 'automatico'){
+			    	if($tipo_caf == 39){
+			    		$this->facturaelectronica->envio_sii($idfactura);
+			    	}else{
+			    		$track_id = $EnvioDTE->enviar();	
+			    		$array_update['trackid'] = $trackid;
+			    	}
+				    
+			    }
+
+
+			    $this->db->where('f.folio', $numfactura);
+			    $this->db->where('c.tipo_caf', $tipo_caf);
+				$this->db->update('folios_caf f inner join caf c on f.idcaf = c.id',$array_update); 
 
 				if($track_id != 0 && $datos_empresa_factura->e_mail != ''){ //existe track id, se envía correo
 					$this->facturaelectronica->envio_mail_dte($idfactura);

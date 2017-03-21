@@ -1060,6 +1060,7 @@ class Facturas extends CI_Controller {
     					'comuna_origen' => $this->input->post('comuna'),
     					'fec_resolucion' => $fec_resolucion,
     					'nro_resolucion' => $this->input->post('nro_resolucion'),
+    					'url' => $this->input->post('url_verifica'),
     					'logo' => 'logo_empresa.png'
     			);
         	if(count($empresa) > 0){ //actualizar
@@ -1089,7 +1090,7 @@ class Facturas extends CI_Controller {
 
 
    		$resp['success'] = true;
-   		$resp['message'] = $error ? $message : "Carga realizada correctamente";
+   		$resp['message'] = $error ? $message : "Datos guardados correctamente";
    		echo json_encode($resp);
 	 }
 

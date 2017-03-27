@@ -441,6 +441,16 @@ truncate movimiento_cuenta_corriente;
 
 
 
+	public function envio_programado_consumo_folios(){
+		set_time_limit(0);
+		$this->load->model('facturaelectronica');
+		$fecha = date('Y-m-d', strtotime('-1 day', strtotime(date("Y-m-d"))));
+	
+		$facturas = $this->facturaelectronica->consumoFolios_by_fecha($fecha);
+
+	}	
+
+
 	public function envio_programado_sii(){
 		set_time_limit(0);
 		$this->load->model('facturaelectronica');

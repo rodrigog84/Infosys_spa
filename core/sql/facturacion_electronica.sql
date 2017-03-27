@@ -486,3 +486,29 @@ INSERT INTO `correlativos` (`id`, `nombre`, `correlativo`) VALUES (102, 'NOTA DE
 INSERT INTO `correlativos` (`id`, `nombre`, `correlativo`) VALUES (103, 'FACTURA EXENTA ELECTRONICA', 0);
 INSERT INTO `correlativos` (`id`, `nombre`, `correlativo`) VALUES (105, 'GUIA DE DESPACHO ELECTRONICA', 84);
 INSERT INTO `correlativos` (`id`, `nombre`, `correlativo`) VALUES (106, 'BOLETA ELECTRONICA', 0);
+
+
+/***********************************************************************************************************/
+
+ALTER TABLE `folios_caf`
+	DROP COLUMN `consumo_folios`,
+	DROP COLUMN `archivo_consumo_folios`;
+ALTER TABLE `folios_caf`
+	ADD COLUMN `idconsumofolios` INT NOT NULL AFTER `pdf_cedible`;
+ALTER TABLE `folios_caf`
+	CHANGE COLUMN `idconsumofolios` `idconsumofolios` INT(11) NOT NULL DEFAULT '0' AFTER `pdf_cedible`;
+
+CREATE TABLE `consumo_folios` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`fecha` DATE NOT NULL,
+	`path` VARCHAR(50) NOT NULL,
+	`archivo` VARCHAR(50) NOT NULL,
+	`xml` TEXT NOT NULL,
+	`trackid` VARCHAR(30) NOT NULL,
+	`created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`id`)
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=MyISAM
+;
+			

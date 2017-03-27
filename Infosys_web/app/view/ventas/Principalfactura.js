@@ -185,7 +185,7 @@ Ext.define('Infosys_web.view.ventas.Principalfactura' ,{
                     }
                 }                
             }]
-    },{
+    },/*{
             header: "Consumo Folios",
             xtype:'actioncolumn',
             width:115,
@@ -208,7 +208,7 @@ Ext.define('Infosys_web.view.ventas.Principalfactura' ,{
                     }
                 }                
             }]
-    },{
+    },*/{
             header: "Env&iacute;o SII",
             xtype:'actioncolumn',
             width:70,

@@ -3068,8 +3068,6 @@ public function cargacontribuyentes(){
 				'Detalle' => $lista_detalle
 			];
 
-			#print_r($factura);# exit;
-
 			//FchResol y NroResol deben cambiar con los datos reales de producción
 			$caratula = [
 			    //'RutEnvia' => '11222333-4', // se obtiene de la firma
@@ -3125,26 +3123,24 @@ public function cargacontribuyentes(){
 			    $dte_cliente = $this->facturaelectronica->crea_archivo_dte($xml_dte_cliente,$idfactura,$tipo_caf,'cliente');
 
 				#CONSUMO DE FOLIOS			    
-				$consumo_folios = array("xml" => "",
+				/*$consumo_folios = array("xml" => "",
 					 "archivo" => "");
 		    	if($tipo_caf == 39){
 		    		$consumo_folios = $this->facturaelectronica->consumoFolios($xml_dte,$idfactura,$tipo_caf);
-		    	}
+		    	}*/
 
 				$array_update = array('dte' => $dte['xml_dte'],
 																						  'dte_cliente' => $dte_cliente['xml_dte'],
-																						  'consumo_folios' => $consumo_folios['xml'],
 																						  'estado' => 'O',
 																						  'idfactura' => $idfactura,
 																						  'path_dte' => $dte['path'],
 																						  'archivo_dte' => $dte['nombre_dte'],
-																						  'archivo_dte_cliente' => $dte_cliente['nombre_dte'],
-																						  'archivo_consumo_folios' => $consumo_folios['archivo']
+																						  'archivo_dte_cliente' => $dte_cliente['nombre_dte']
 																						  );	    	
 
 			    if($tipo_envio == 'automatico'){
 			    	if($tipo_caf == 39){
-			    		$this->facturaelectronica->envio_sii($idfactura);
+			    		#$this->facturaelectronica->envio_sii($idfactura);
 			    	}else{
 			    		$track_id = $EnvioDTE->enviar();	
 			    		$array_update['trackid'] = $trackid;

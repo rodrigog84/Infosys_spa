@@ -242,13 +242,15 @@ class Facturaelectronica extends CI_Model
 	 }	 
 
 
-	public function get_factura_no_enviada(){
+	public function get_factura_no_enviada(){ ## NO CONSIDERA BOLETAS ELECTRONICAS
 		$this->db->select('c.idfactura')
 		  ->from('folios_caf c ')
 		  ->join('factura_clientes fc','c.idfactura = fc.id')
+		  ->join('caf ca','c.idcaf = ca.id')
 		  ->where('c.trackid','0')
 		  ->where('c.idfactura <> 0')
-		  ->where('c.estado','O');
+		  ->where('c.estado','O')
+		  ->where('ca.tipo_caf <> 39');
 		$query = $this->db->get();
 		return $query->result();
 	 }
@@ -267,7 +269,7 @@ class Facturaelectronica extends CI_Model
 
 	public function datos_dte($idfactura){
 
-		$this->db->select('f.id, f.folio, f.path_dte, f.archivo_dte,  f.archivo_dte_cliente, f.archivo_consumo_folios, f.dte, f.dte_cliente, f.consumo_folios, f.pdf, f.pdf_cedible, f.trackid, c.tipo_caf, tc.nombre as tipo_doc, cae.nombre as giro, cp.nombre as cond_pago, v.nombre as vendedor ')
+		$this->db->select('f.id, f.folio, f.path_dte, f.archivo_dte,  f.archivo_dte_cliente, f.dte, f.dte_cliente, f.pdf, f.pdf_cedible, f.trackid, c.tipo_caf, tc.nombre as tipo_doc, cae.nombre as giro, cp.nombre as cond_pago, v.nombre as vendedor ')
 		  ->from('folios_caf f')
 		  ->join('caf c','f.idcaf = c.id')
 		  ->join('tipo_caf tc','c.tipo_caf = tc.id')
@@ -296,7 +298,7 @@ class Facturaelectronica extends CI_Model
 	}	
 
 public function datos_dte_by_trackid($trackid){
-		$this->db->select('f.id, f.folio, f.path_dte, f.archivo_dte, f.archivo_consumo_folios, f.dte, f.dte_cliente, f.consumo_folios, f.pdf, f.pdf_cedible, f.trackid, c.tipo_caf, tc.nombre as tipo_doc, cae.nombre as giro, cp.nombre as cond_pago, v.nombre as vendedor    ')
+		$this->db->select('f.id, f.folio, f.path_dte, f.archivo_dte, f.dte, f.dte_cliente, f.pdf, f.pdf_cedible, f.trackid, c.tipo_caf, tc.nombre as tipo_doc, cae.nombre as giro, cp.nombre as cond_pago, v.nombre as vendedor    ')
 		  ->from('folios_caf f')
 		  ->join('caf c','f.idcaf = c.id')
 		  ->join('tipo_caf tc','c.tipo_caf = tc.id')
@@ -417,6 +419,164 @@ public function datos_dte_by_trackid($trackid){
 	}
 
 
+
+	public function get_boletas_by_fecha($fecha){ ## NO CONSIDERA BOLETAS ELECTRONICAS
+		$this->db->select('c.idfactura')
+		  ->from('folios_caf c ')
+		  ->join('factura_clientes fc','c.idfactura = fc.id')
+		  ->join('caf ca','c.idcaf = ca.id')
+		  ->where('c.trackid','0')
+		  ->where('c.idfactura <> 0')
+		  ->where('fc.fecha_factura',$fecha)
+		  ->where('c.estado','O')
+		  ->where('c.idconsumofolios',0)		  
+		  ->where('ca.tipo_caf','39');
+		$query = $this->db->get();
+		return $query->result();
+	 }
+
+
+	public function get_consumo_folios($fecha){ ## NO CONSIDERA BOLETAS ELECTRONICAS
+		$this->db->select('c.id, c.archivo, c.path, c.trackid, c.xml')
+		  ->from('consumo_folios c ')
+		  ->where('c.fecha',$fecha);
+		$query = $this->db->get();
+		return $query->result();
+	 }	 
+
+
+	public function consumoFolios_by_fecha($fecha){
+
+		$this->db->trans_start();
+		$config = $this->facturaelectronica->genera_config();
+		include_once $this->facturaelectronica->ruta_libredte();
+
+		$consumo_folios_generados = $this->get_consumo_folios($fecha);
+
+		if(count($consumo_folios_generados) == 0){
+			$datos_boletas = $this->get_boletas_by_fecha($fecha);
+
+			$ConsumoFolio = new \sasco\LibreDTE\Sii\ConsumoFolio();
+			$ConsumoFolio->setFirma(new \sasco\LibreDTE\FirmaElectronica($config['firma']));
+
+			$set_caratula = true;
+			$array_folios_id = array();
+			foreach ($datos_boletas as $boleta) {
+				$idfactura = $boleta->idfactura;
+				$boleta = $this->facturaelectronica->datos_dte($idfactura);
+
+
+				$ruta_xml = "dte";
+				$archivo_xml = $boleta->archivo_dte;
+
+				$archivo = "./facturacion_electronica/" . $ruta_xml . "/".$boleta->path_dte.$archivo_xml;
+			 	if(file_exists($archivo)){
+			 		$xml = file_get_contents($archivo);
+			 	}else{
+			 		$xml = $boleta->dte;
+			 	}
+
+				$EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
+				$EnvioDte->loadXML($xml);
+				foreach ($EnvioDte->getDocumentos() as $Dte) {
+				    $ConsumoFolio->agregar($Dte->getResumen());
+				}
+
+				if($set_caratula){
+					// así se obtiene automáticamente la fecha inicial y final de los documentos)
+					$CaratulaEnvioBOLETA = $EnvioDte->getCaratula();
+					$ConsumoFolio->setCaratula([
+					    'RutEmisor' => $CaratulaEnvioBOLETA['RutEmisor'],
+					    'FchResol' => $CaratulaEnvioBOLETA['FchResol'],
+					    'NroResol' => $CaratulaEnvioBOLETA['NroResol'],
+					]);
+					$set_caratula = false;
+				}
+				#var_dump($Documentos->getResumen());
+				$array_folios_id[] = $boleta->id;
+			}
+
+			// generar, validar schema y mostrar XML
+			$ConsumoFolio->generar();
+			$xml_consumo_folios = "";
+			$nombre_dte = "";
+
+			if ($ConsumoFolio->schemaValidate()) {
+			    $xml_consumo_folios =  $ConsumoFolio->generar();
+
+				$file_name = "CON_";
+				$nombre_dte = "CONSUMO_FOLIOS_" . $fecha . ".xml"; // nombre 
+				$ruta = 'consumo_folios';
+				$path = date('Ym').'/'; // ruta guardado
+				if(!file_exists('./facturacion_electronica/' . $ruta . '/'.$path)){
+					mkdir('./facturacion_electronica/' . $ruta . '/'.$path,0777,true);
+				}				
+				$f_archivo = fopen('./facturacion_electronica/' . $ruta .'/'.$path.$nombre_dte,'w');
+				fwrite($f_archivo,$xml_consumo_folios);
+				fclose($f_archivo);
+
+				
+				$array_insert = array('fecha' => $fecha,
+							  'path' => $path,
+							  'archivo' => $nombre_dte,
+							  'xml' => $xml_consumo_folios,
+							  //'trackid' => $track_id
+							  );
+
+				$this->db->insert('consumo_folios',$array_insert);
+				$id_consumo_folios = $this->db->insert_id();
+
+				foreach ($array_folios_id as $folios_id) {
+					$this->db->where('id',$folios_id);
+					$this->db->update('folios_caf',array('idconsumofolios' => $id_consumo_folios));
+				}
+
+				$track_id = $ConsumoFolio->enviar();
+				$this->db->where('id',$id_consumo_folios);
+				$this->db->update('consumo_folios',array('trackid' => $track_id));
+			}
+
+		}else{
+			$empresa = $this->facturaelectronica->get_empresa();
+			$RutEmisor = $empresa->rut."-".$empresa->dv;
+			$token = \sasco\LibreDTE\Sii\Autenticacion::getToken($config['firma']);
+
+			$Firma = new \sasco\LibreDTE\FirmaElectronica($config['firma']); //lectura de certificado digital
+			$rut = $Firma->getId(); 
+			$rut_consultante = explode("-",$rut);
+			$RutEnvia = $rut_consultante[0]."-".$rut_consultante[1];			
+			foreach ($consumo_folios_generados as $consumo) {
+				if($consumo->trackid == ''){
+
+
+					$ruta_xml = "consumo_folios";
+					$archivo_xml = $consumo->archivo;
+
+					$archivo = "./facturacion_electronica/" . $ruta_xml . "/".$consumo->path.$archivo_xml;
+				 	if(file_exists($archivo)){
+				 		$xml = file_get_contents($archivo);
+				 	}else{
+				 		$xml = $factura->dte;
+				 	}
+				 	var_dump($xml);
+
+					$EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
+					$EnvioDte->loadXML($xml);
+
+
+					// enviar DTE
+					$result_envio = \sasco\LibreDTE\Sii::enviar($RutEnvia, $RutEmisor, $xml, $token);
+					$track_id = (int)$result_envio->TRACKID;
+					$this->db->where('id',$consumo->id);
+					$this->db->update('consumo_folios',array('trackid' => $track_id));
+				}
+			}
+
+		}
+		$this->db->trans_complete();
+	}	
+
+
 	 public function exportFePDF($idfactura,$tipo_consulta,$cedible = null){
 
 	 	include $this->ruta_libredte();
@@ -425,7 +585,6 @@ public function datos_dte_by_trackid($trackid){
 	 	}else if($tipo_consulta == 'trackid'){
 	 		$factura = $this->datos_dte_by_trackid($idfactura);
 	 	}
-
 
 
 	 	$nombre_pdf = is_null($cedible) ? $factura->pdf : $factura->pdf_cedible;

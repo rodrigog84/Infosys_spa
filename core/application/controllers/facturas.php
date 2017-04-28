@@ -5411,6 +5411,14 @@ font-family: Arial, Helvetica, sans-serif;
         }
 
 
+
+        public function crea_factura_fe(){
+        	$this->load->model('facturaelectronica');
+        	$this->facturaelectronica->crea_factura();
+
+        }
+
+
 }
 
 

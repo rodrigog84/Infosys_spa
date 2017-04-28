@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:ns0="http://localhost/Infosys_spa/core/facturacion_electronica/ws/feWs.wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="moodle" targetNamespace="http://localhost/Infosys_spa/core/facturacion_electronica/ws/feWs.wsdl">
+
+
+  <wsdl:message name="datosFolioRequest">
+    <wsdl:part name="tipodocto" type="xsd:string"/>
+  </wsdl:message>
+  
+
+  <wsdl:message name="datosFolioResponse">
+    <wsdl:part name="folio" type="xsd:string"/>
+  </wsdl:message>
+  
+  
+
+
+   <wsdl:portType name="feWs">
+    <wsdl:operation name="obtieneFolio">
+      <wsdl:input message="ns0:datosFolioRequest"/>
+      <wsdl:output message="ns0:datosFolioResponse"/>
+    </wsdl:operation>
+
+  </wsdl:portType>
+
+  <wsdl:binding name="bindSOAP" type="ns0:feWs">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <wsdl:operation name="obtieneFolio">
+      <soap:operation soapAction=""/>
+      <wsdl:input>
+        <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://localhost/Infosys_spa/core/facturacion_electronica/ws/feWs.wsdl"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://localhost/Infosys_spa/core/facturacion_electronica/ws/feWs.wsdl"/>
+      </wsdl:output>
+    </wsdl:operation>
+                 
+  </wsdl:binding>
+
+  <wsdl:service name="servicioSOAP">
+    <wsdl:port name="puertoSOAP" binding="ns0:bindSOAP">
+      <soap:address location="http://localhost/Infosys_spa/core/facturacion_electronica/ws/feWs.php"/>
+    </wsdl:port>
+  </wsdl:service>
+
+</wsdl:definitions>

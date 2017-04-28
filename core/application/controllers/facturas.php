@@ -1752,13 +1752,13 @@ public function cargacontribuyentes(){
 
 
 
-	public function folio_documento_electronico($tipo_doc){
+	public function folio_documento_electronico($tipo_doc,$tipo = 'infosys'){
 
 
 		$this->db->trans_start();
 		$tipo_caf = 0;
 
-		$tipo_caf = tdtocaf($tipo_doc);
+		$tipo_caf = $tipo == 'infosys' ? tdtocaf($tipo_doc) : $tipo_doc;
 
 		$nuevo_folio = 0;
 

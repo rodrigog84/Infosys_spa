@@ -512,3 +512,46 @@ COLLATE='latin1_swedish_ci'
 ENGINE=MyISAM
 ;
 			
+
+/*****************************************************************************************************************/
+
+CREATE TABLE `datos_factura_ws` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`tipocaf` INT(11) NOT NULL DEFAULT '0',
+	`folio` INT(11) NOT NULL DEFAULT '0',
+	`referencia` INT(11) NOT NULL DEFAULT '0',
+	`fechafactura` DATE NOT NULL DEFAULT '0000-00-00',
+	`condicion` VARCHAR(50) NOT NULL DEFAULT '0',
+	`vendedor` VARCHAR(250) NOT NULL DEFAULT '0',
+	`rut` INT(10) NOT NULL DEFAULT '0',
+	`dv` CHAR(1) NOT NULL DEFAULT '0',
+	`razonsocial` VARCHAR(150) NOT NULL DEFAULT '0',
+	`giro` VARCHAR(150) NOT NULL DEFAULT '0',
+	`direccion` VARCHAR(150) NOT NULL DEFAULT '0',
+	`comuna` VARCHAR(100) NOT NULL DEFAULT '0',
+	`ciudad` VARCHAR(100) NOT NULL DEFAULT '0',
+	`cuenta` VARCHAR(100) NOT NULL DEFAULT '0',
+	`neto` INT(11) NOT NULL DEFAULT '0',
+	`iva` INT(11) NOT NULL DEFAULT '0',
+	`total` INT(11) NOT NULL DEFAULT '0',
+	`codigo` VARCHAR(50) NOT NULL DEFAULT '0',
+	`cantidad` DOUBLE NOT NULL DEFAULT '0',
+	`unidad` VARCHAR(50) NOT NULL DEFAULT '0',
+	`nombre` VARCHAR(150) NOT NULL DEFAULT '0',
+	`preciounit` INT(11) NOT NULL DEFAULT '0',
+	`totaldetalle` INT(11) NOT NULL DEFAULT '0',
+	`oreferencia` VARCHAR(250) NOT NULL,
+	`codigoproceso` VARCHAR(30) NOT NULL DEFAULT '',
+	`created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`id`)
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+ROW_FORMAT=COMPACT
+AUTO_INCREMENT=28
+;
+
+
+INSERT INTO `datos_factura_ws` (`id`, `tipocaf`, `folio`, `referencia`, `fechafactura`, `condicion`, `vendedor`, `rut`, `dv`, `razonsocial`, `giro`, `direccion`, `comuna`, `ciudad`, `cuenta`, `neto`, `iva`, `total`, `codigo`, `cantidad`, `unidad`, `nombre`, `preciounit`, `totaldetalle`, `oreferencia`, `codigoproceso`, `created_at`) VALUES (1, 61, 3, 0, '2016-12-29', '', '', 91537000, '4', 'BAYER S.A.', 'INDUSTRIA QUIMICA', 'AV.ANDRES BELLO N? 2457 PISO 21 OF 2101', 'PROVIDENCIA', 'SANTIAGO', '      ', 4860690, 923531, 5784221, '           ', 1, 'UNI', 'COMISION POR COMPRAS 2016                                   ', 4860690, 4860690, '', 'Na8EJBYRPa', '2017-01-12 16:17:27');
+INSERT INTO `datos_factura_ws` (`id`, `tipocaf`, `folio`, `referencia`, `fechafactura`, `condicion`, `vendedor`, `rut`, `dv`, `razonsocial`, `giro`, `direccion`, `comuna`, `ciudad`, `cuenta`, `neto`, `iva`, `total`, `codigo`, `cantidad`, `unidad`, `nombre`, `preciounit`, `totaldetalle`, `oreferencia`, `codigoproceso`, `created_at`) VALUES (26, 33, 1140, 0, '2017-02-14', 'CONTADO', 'COBRANZA DE OFICINA', 9017126, '7', 'LOYOLA VALDES MANUEL ANTONIO', 'AGRICOLA', 'PARC. 317 HIJUELA 2 LOTE A LOS MONTES', 'SAN CLEMENTE', 'SAN CLEMENTE', '      ', 84960, 16142, 101103, '00FFA090', 4, 'SAC', 'NITRATO POTASIO SOLUB SQM', 15210, 60840, '', 'O3vJOlnwhA', '2017-02-15 10:12:20');
+INSERT INTO `datos_factura_ws` (`id`, `tipocaf`, `folio`, `referencia`, `fechafactura`, `condicion`, `vendedor`, `rut`, `dv`, `razonsocial`, `giro`, `direccion`, `comuna`, `ciudad`, `cuenta`, `neto`, `iva`, `total`, `codigo`, `cantidad`, `unidad`, `nombre`, `preciounit`, `totaldetalle`, `oreferencia`, `codigoproceso`, `created_at`) VALUES (27, 33, 1140, 0, '2017-02-14', 'CONTADO', 'COBRANZA DE OFICINA', 9017126, '7', 'LOYOLA VALDES MANUEL ANTONIO', 'AGRICOLA', 'PARC. 317 HIJUELA 2 LOTE A LOS MONTES', 'SAN CLEMENTE', 'SAN CLEMENTE', '      ', 84960, 16142, 101103, '00PF0124', 1, 'LTS', 'BIOZYME TF (1 LT)', 24120, 24120, '', 'O3vJOlnwhA', '2017-02-15 10:12:20');

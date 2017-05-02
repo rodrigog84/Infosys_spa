@@ -555,3 +555,13 @@ AUTO_INCREMENT=28
 INSERT INTO `datos_factura_ws` (`id`, `tipocaf`, `folio`, `referencia`, `fechafactura`, `condicion`, `vendedor`, `rut`, `dv`, `razonsocial`, `giro`, `direccion`, `comuna`, `ciudad`, `cuenta`, `neto`, `iva`, `total`, `codigo`, `cantidad`, `unidad`, `nombre`, `preciounit`, `totaldetalle`, `oreferencia`, `codigoproceso`, `created_at`) VALUES (1, 61, 3, 0, '2016-12-29', '', '', 91537000, '4', 'BAYER S.A.', 'INDUSTRIA QUIMICA', 'AV.ANDRES BELLO N? 2457 PISO 21 OF 2101', 'PROVIDENCIA', 'SANTIAGO', '      ', 4860690, 923531, 5784221, '           ', 1, 'UNI', 'COMISION POR COMPRAS 2016                                   ', 4860690, 4860690, '', 'Na8EJBYRPa', '2017-01-12 16:17:27');
 INSERT INTO `datos_factura_ws` (`id`, `tipocaf`, `folio`, `referencia`, `fechafactura`, `condicion`, `vendedor`, `rut`, `dv`, `razonsocial`, `giro`, `direccion`, `comuna`, `ciudad`, `cuenta`, `neto`, `iva`, `total`, `codigo`, `cantidad`, `unidad`, `nombre`, `preciounit`, `totaldetalle`, `oreferencia`, `codigoproceso`, `created_at`) VALUES (26, 33, 1140, 0, '2017-02-14', 'CONTADO', 'COBRANZA DE OFICINA', 9017126, '7', 'LOYOLA VALDES MANUEL ANTONIO', 'AGRICOLA', 'PARC. 317 HIJUELA 2 LOTE A LOS MONTES', 'SAN CLEMENTE', 'SAN CLEMENTE', '      ', 84960, 16142, 101103, '00FFA090', 4, 'SAC', 'NITRATO POTASIO SOLUB SQM', 15210, 60840, '', 'O3vJOlnwhA', '2017-02-15 10:12:20');
 INSERT INTO `datos_factura_ws` (`id`, `tipocaf`, `folio`, `referencia`, `fechafactura`, `condicion`, `vendedor`, `rut`, `dv`, `razonsocial`, `giro`, `direccion`, `comuna`, `ciudad`, `cuenta`, `neto`, `iva`, `total`, `codigo`, `cantidad`, `unidad`, `nombre`, `preciounit`, `totaldetalle`, `oreferencia`, `codigoproceso`, `created_at`) VALUES (27, 33, 1140, 0, '2017-02-14', 'CONTADO', 'COBRANZA DE OFICINA', 9017126, '7', 'LOYOLA VALDES MANUEL ANTONIO', 'AGRICOLA', 'PARC. 317 HIJUELA 2 LOTE A LOS MONTES', 'SAN CLEMENTE', 'SAN CLEMENTE', '      ', 84960, 16142, 101103, '00PF0124', 1, 'LTS', 'BIOZYME TF (1 LT)', 24120, 24120, '', 'O3vJOlnwhA', '2017-02-15 10:12:20');
+
+
+ALTER TABLE `factura_clientes`
+	ADD COLUMN `cond_venta` VARCHAR(50) NOT NULL AFTER `id_cond_venta`;
+
+ALTER TABLE `factura_clientes`
+	ADD COLUMN `vendedor` VARCHAR(250) NOT NULL AFTER `cond_venta`;
+
+ALTER TABLE `factura_clientes`
+	ADD COLUMN `oreferencia` VARCHAR(250) NOT NULL AFTER `forma`;

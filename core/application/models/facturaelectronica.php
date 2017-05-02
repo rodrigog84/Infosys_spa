@@ -1330,6 +1330,7 @@ public function datos_dte_by_trackid($trackid){
 		include $this->ruta_libredte();
 		$empresa = $this->get_empresa();
 
+
 		foreach ($data_doctos as $docto) {
 
 			header('Content-type: text/plain; charset=ISO-8859-1');
@@ -1470,7 +1471,8 @@ public function datos_dte_by_trackid($trackid){
 								    ],
 									'Detalle' => $lista_detalle,
 					                'Referencia' => [
-					                    'TpoDocRef' => $data_csv[0]->referencia > 100000 ? 30 : 33,
+					                    //'TpoDocRef' => $data_csv[0]->referencia > 100000 ? 30 : 33,
+					                	'TpoDocRef' => 33,
 					                    'FolioRef' => $data_csv[0]->referencia,
 					                    'CodRef' => $tipo_nota_credito,
 					                    'RazonRef' => $glosa,

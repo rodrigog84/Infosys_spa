@@ -2,6 +2,53 @@
 <wsdl:definitions xmlns:ns0="http://localhost/Infosys_spa/core/facturacion_electronica/ws/feWs.wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="moodle" targetNamespace="http://localhost/Infosys_spa/core/facturacion_electronica/ws/feWs.wsdl">
 
 
+
+<wsdl:types>
+    <xsd:schema targetNamespace="http://localhost/Infosys_spa/core/facturacion_electronica/ws/feWs.wsdl">
+
+        <xsd:complexType name="datosDte">
+          <xsd:sequence>
+                <xsd:element minOccurs="1" maxOccurs="1" name="tipocaf" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="folio" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="fecfactura" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="condventa" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="rutreceptor" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="razonsocial" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="giro" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="direccion" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="comuna" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="ciudad" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="neto" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="iva" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="total" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="detalledte" type="ns0:detalledteArray"/>
+          </xsd:sequence>
+        </xsd:complexType> 
+        <xsd:complexType name="detalledteArray">
+          <complexContent>
+            <restriction base="SOAP-ENC:Array">
+              <xsd:sequence>
+                <xsd:element minOccurs="0" maxOccurs="unbounded" name="detalledteList" type="ns0:detalledteData"/>
+              </xsd:sequence>
+            </restriction>
+          </complexContent>  
+        </xsd:complexType>         
+        <xsd:complexType name="detalledteData">
+          <xsd:sequence>
+                <xsd:element minOccurs="1" maxOccurs="1" name="codigos" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="cantidads" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="unidads" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="nombres" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="preciounits" type="xsd:string"/>
+                <xsd:element minOccurs="1" maxOccurs="1" name="totals" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>          
+   
+    </xsd:schema>
+  </wsdl:types>
+
+
+
   <wsdl:message name="datosFolioRequest">
     <wsdl:part name="tipodocto" type="xsd:string"/>
   </wsdl:message>
@@ -12,6 +59,13 @@
   </wsdl:message>
   
   
+  <wsdl:message name="datosDteRequest">
+    <wsdl:part name="dte" type="ns0:datosDte"/>
+  </wsdl:message>
+
+  <wsdl:message name="datosDteResponse">
+    <wsdl:part name="xml" type="xsd:string"/>
+  </wsdl:message>
 
 
    <wsdl:portType name="feWs">
@@ -19,7 +73,10 @@
       <wsdl:input message="ns0:datosFolioRequest"/>
       <wsdl:output message="ns0:datosFolioResponse"/>
     </wsdl:operation>
-
+    <wsdl:operation name="creaDte">
+      <wsdl:input message="ns0:datosDteRequest"/>
+      <wsdl:output message="ns0:datosDteResponse"/>
+    </wsdl:operation>
   </wsdl:portType>
 
   <wsdl:binding name="bindSOAP" type="ns0:feWs">
@@ -33,6 +90,16 @@
         <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://localhost/Infosys_spa/core/facturacion_electronica/ws/feWs.wsdl"/>
       </wsdl:output>
     </wsdl:operation>
+
+    <wsdl:operation name="creaDte">
+      <soap:operation soapAction=""/>
+      <wsdl:input>
+        <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://localhost/Infosys_spa/core/facturacion_electronica/ws/feWs.wsdl"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://localhost/Infosys_spa/core/facturacion_electronica/ws/feWs.wsdl"/>
+      </wsdl:output>
+    </wsdl:operation>    
                  
   </wsdl:binding>
 

@@ -565,3 +565,19 @@ ALTER TABLE `factura_clientes`
 
 ALTER TABLE `factura_clientes`
 	ADD COLUMN `oreferencia` VARCHAR(250) NOT NULL AFTER `forma`;
+
+ALTER TABLE `empresa`
+	ADD COLUMN `fono` VARCHAR(20) NULL DEFAULT '' AFTER `comuna_origen`;	
+
+ALTER TABLE `empresa`
+	ADD COLUMN `mail` VARCHAR(50) NULL DEFAULT '' AFTER `fono`;
+
+ALTER TABLE `usuario`
+	ADD COLUMN `idempresa` INT NOT NULL AFTER `rol`;		
+
+ALTER TABLE `empresa`
+	ADD COLUMN `certificado` VARCHAR(50) NULL DEFAULT NULL AFTER `logo`,
+	ADD COLUMN `pass_certificado` VARCHAR(50) NULL DEFAULT NULL AFTER `certificado`;	
+
+ALTER TABLE `caf`
+	ADD COLUMN `idempresa` INT(11) NOT NULL DEFAULT '0' AFTER `id`;	

@@ -46,7 +46,6 @@ class Login extends CI_Controller {
 
 		$str_q = 'SELECT *  FROM usuario ';
 		$str_q .= ' WHERE username="'.$usuario.'" and password="'.$password .'" ';
-
 		$query = $this->db->query($str_q);
 
 		$data = array();
@@ -57,6 +56,7 @@ class Login extends CI_Controller {
 			$nombre = $row->nombre;
 			$apellido = $row->apellido;
 			$username = $row->username;
+			$idempresa = $row->idempresa;
 			$id_usu = $row->id;
 
 			$str_accesos = 'SELECT acc.* FROM accesos acc 
@@ -80,10 +80,12 @@ class Login extends CI_Controller {
 			        'nombre'=> $nombre,
 			        'apellido'=> $apellido,
 			        'username'=> $username,
+			        'idempresa'=> $idempresa,
 			        'id_usu'=> $id_usu,
 			        'is_ok'=>true
 			    )
 			);
+
 			$resp['success'] = true;
 		}else{
 			$resp['success'] = false;
@@ -113,6 +115,7 @@ class Login extends CI_Controller {
 			$data = array(
 				"nombre"=> $this->session->userdata('nombre'),
 				"usuario"=> $this->session->userdata('usuario'),
+				"idempresa"=> $this->session->userdata('idempresa'),
 				"username"=> $this->session->userdata('username'),
 				"modules"=> $this->session->userdata('modules'),
 				"success"=> true

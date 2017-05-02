@@ -61,7 +61,11 @@ class Facturaelectronica extends CI_Model
 	public function ruta_certificado(){
 		$base_path = __DIR__;
 		$base_path = str_replace("\\", "/", $base_path);
-		$path = $base_path . "/../../facturacion_electronica/certificado/certificado.pfx";		
+
+		$empresa = $this->get_empresa();
+		$nomb_certificado = $empresa->certificado != '' ? $empresa->certificado : 'xxxxxxxxxx.p12';
+
+		$path = $base_path . "/../../facturacion_electronica/certificado/cert_" . $this->session->userdata('idempresa') . "/" . $nomb_certificado;		
 		return $path;
 	}
 
@@ -126,8 +130,9 @@ class Facturaelectronica extends CI_Model
 	 }
 
 	public function get_empresa(){
-		$this->db->select('rut, dv, razon_social, giro, cod_actividad, dir_origen, comuna_origen, fec_resolucion, nro_resolucion, logo, url ')
+		$this->db->select('rut, dv, razon_social, giro, cod_actividad, dir_origen, comuna_origen, fec_resolucion, nro_resolucion, logo, url, certificado, pass_certificado ')
 		  ->from('empresa')
+		  ->where('id',$this->session->userdata('idempresa'))
 		  ->limit(1);
 		$query = $this->db->get();
 		return $query->row();

@@ -541,13 +541,13 @@ Ext.define('Infosys_web.view.TopMenus' ,{
                         itemId: 'vyf_registro_empresa',
                         disabled: '',
                         action: 'mregempresa'
-                },{
+                },/*{
                         text: 'Par&aacute;metros Generales',
                         iconCls: '',
                         itemId: 'vyf_param_generales',
                         disabled: '',
                         action: 'mparamgenerales'
-                },{
+                },*/{
                         text: 'Carga Certificado Digital',
                         iconCls: '',
                         itemId: 'vyf_cert_digital',

@@ -900,6 +900,7 @@ class Facturas extends CI_Controller {
 		$this->db->select('f.id ')
 						  ->from('folios_caf f')
 						  ->join('caf c','f.idcaf = c.id')
+						  ->where('idempresa',$this->session->userdata('idempresa'))
 						  ->where('c.tipo_caf',$tipo_documento)
 						  ->where("f.estado = 'P'");
 		$query = $this->db->get();
@@ -1015,7 +1016,13 @@ class Facturas extends CI_Controller {
 		$password = $this->input->post('password');
 
         $password_encrypt = md5($password.SALT);
-        $config['upload_path'] = "./facturacion_electronica/certificado/"	;
+
+		if(!file_exists('./facturacion_electronica/certificado/cert_'.$this->session->userdata('idempresa'))){
+			mkdir('./facturacion_electronica/certificado/cert_'.$this->session->userdata('idempresa'),0777,true);
+		}		
+
+
+        $config['upload_path'] = "./facturacion_electronica/certificado/cert_" . $this->session->userdata('idempresa') . "/"	;
 
         $config['file_name'] = "certificado";
         $config['allowed_types'] = "*";
@@ -1035,6 +1042,13 @@ class Facturas extends CI_Controller {
             //redirect('accounts/add_cuenta/2');
             //return;
         }else{
+        	$array_archivo = $this->upload->data();
+        	$this->db->where('id',$this->session->userdata('idempresa'));
+			$this->db->update('empresa',array(
+											'certificado' => $array_archivo['file_name'],
+											'pass_certificado' => $password)); 
+
+
 			$this->db->where('nombre', 'cert_password');
 			$this->db->update('param_fe',array('valor' => $password)); 
 
@@ -1055,7 +1069,7 @@ class Facturas extends CI_Controller {
 		$empresa = $this->facturaelectronica->get_empresa();
 		$tipo_caf = $this->input->post('tipoCaf');
         $config['upload_path'] = "./facturacion_electronica/images/"	;
-        $config['file_name'] = 'logo_empresa';
+        $config['file_name'] = 'logo_empresa'.$this->session->userdata('idempresa');
         $config['allowed_types'] = "*";
         $config['max_size'] = "10240";
         $config['overwrite'] = TRUE;
@@ -1088,10 +1102,10 @@ class Facturas extends CI_Controller {
     					'fec_resolucion' => $fec_resolucion,
     					'nro_resolucion' => $this->input->post('nro_resolucion'),
     					'url' => $this->input->post('url_verifica'),
-    					'logo' => 'logo_empresa.png'
+    					'logo' => 'logo_empresa' . $this->session->userdata('idempresa') . '.png'
     			);
         	if(count($empresa) > 0){ //actualizar
-        		$this->db->where('id',1);
+        		$this->db->where('id',$this->session->userdata('idempresa'));
         		$this->db->update('empresa',$data_empresa);
 
         	}else{ //insertar
@@ -1627,7 +1641,14 @@ public function cargacontribuyentes(){
 
 	public function cargacaf(){
 		$tipo_caf = $this->input->post('tipoCaf');
-        $config['upload_path'] = "./facturacion_electronica/caf/"	;
+
+		if(!file_exists('./facturacion_electronica/caf/emp_'.$this->session->userdata('idempresa'))){
+			mkdir('./facturacion_electronica/caf/emp_'.$this->session->userdata('idempresa'),0777,true);
+		}			
+
+
+
+        $config['upload_path'] = "./facturacion_electronica/caf/emp_" . $this->session->userdata('idempresa') . "/"	;
         $config['file_name'] = $tipo_caf."_".date("Ymdhis");
         $config['allowed_types'] = "*";
         $config['max_size'] = "10240";
@@ -1671,13 +1692,19 @@ public function cargacontribuyentes(){
 			// VALIDAR EL RUT DE EMPRESA DEL CAF
 			if(!$error){
 
-				$this->db->select('valor ')
+				/*$this->db->select('valor ')
 				  ->from('param_fe')
 				  ->where('nombre','rut_empresa');
-				$query = $this->db->get();
-				$parametro = $query->row();	
 
-				$rut_parametro = $parametro->valor;
+				$query = $this->db->get();
+				$parametro = $query->row();	*/
+
+				$this->load->model('facturaelectronica');
+				$empresa = $this->facturaelectronica->get_empresa();
+
+
+				//$rut_parametro = $parametro->valor;
+				$rut_parametro = $empresa->rut."-".$empresa->dv;
 
 				$rut_caf = $xml->CAF->DA->RE; 
 				if($rut_parametro != $rut_caf){
@@ -1695,6 +1722,7 @@ public function cargacontribuyentes(){
 				$this->db->select('f.id ')
 								  ->from('folios_caf f')
 								  ->join('caf c','f.idcaf = c.id')
+								  ->where('c.idempresa',$this->session->userdata('idempresa'))
 								  ->where('c.tipo_caf',$tipo_caf)
 								  ->where('f.folio between ' . $folio_desde . ' and ' . $folio_hasta);
 
@@ -1708,6 +1736,7 @@ public function cargacontribuyentes(){
 
 					// SE CREA LOG DE CARGA DE FOLIOS
 					$data_array = array(
+						'idempresa' => $this->session->userdata('idempresa'),
 						'tipo_caf' => $tipo_caf,
 						'fd' => $folio_desde,
 						'fh' => $folio_hasta,					

@@ -41,7 +41,7 @@ class Productosfact extends CI_Controller {
 			left join agrupacion ag on (acc.id_agrupacion = ag.id)
 			left join subfamilias sb on (acc.id_subfamilia = sb.id)
 			left join bodegas bo on (acc.id_bodega = bo.id)
-			WHERE ' . $sql_nombre . ' 1 = 1');
+			WHERE ' . $sql_nombre . ' acc.idempresa = ' . $this->session->userdata('idempresa'));
 
 			$total = 0;
 
@@ -62,7 +62,7 @@ class Productosfact extends CI_Controller {
 			left join agrupacion ag on (acc.id_agrupacion = ag.id)
 			left join subfamilias sb on (acc.id_subfamilia = sb.id)
 			left join bodegas bo on (acc.id_bodega = bo.id)
-			WHERE acc.id_familia like "%'.$familia.'%"');
+			WHERE acc.id_familia like "%'.$familia.'%" and acc.idempresa = ' . $this->session->userdata('idempresa'));
 
 			$total = 0;
 
@@ -84,7 +84,7 @@ class Productosfact extends CI_Controller {
 			left join agrupacion ag on (acc.id_agrupacion = ag.id)
 			left join subfamilias sb on (acc.id_subfamilia = sb.id)
 			left join bodegas bo on (acc.id_bodega = bo.id)
-			WHERE acc.id_subfamilia like "%'.$subfamilia.'%"');
+			WHERE acc.id_subfamilia like "%'.$subfamilia.'%" and acc.idempresa = ' . $this->session->userdata('idempresa'));
 
 			$total = 0;
 
@@ -107,7 +107,7 @@ class Productosfact extends CI_Controller {
 			left join agrupacion ag on (acc.id_agrupacion = ag.id)
 			left join subfamilias sb on (acc.id_subfamilia = sb.id)
 			left join bodegas bo on (acc.id_bodega = bo.id)
-			WHERE acc.id_agrupacion like "%'.$agrupacion.'%"');
+			WHERE acc.id_agrupacion like "%'.$agrupacion.'%" and acc.idempresa = ' . $this->session->userdata('idempresa'));
 
 			$total = 0;
 
@@ -130,6 +130,7 @@ class Productosfact extends CI_Controller {
 			left join agrupacion ag on (acc.id_agrupacion = ag.id)
 			left join subfamilias sb on (acc.id_subfamilia = sb.id)
 			left join bodegas bo on (acc.id_bodega = bo.id)
+			where acc.idempresa = ' . $this->session->userdata('idempresa') . '
 			limit '.$start.', '.$limit.'
 		     ' );
 		}

@@ -240,7 +240,7 @@ class Clientes extends CI_Controller {
 			left join comuna com on (acc.id_comuna = com.id)
 			left join vendedores ven on (acc.id_vendedor = ven.id)
 			left join cond_pago con on (acc.id_pago = con.id)
-			WHERE acc.rut = "'.$nombres.'" AND acc.tipo = 1 OR acc.rut = "'.$nombres.'" AND acc.tipo = 3  ');
+			WHERE acc.rut = "'.$nombres.'" AND acc.tipo = 1 OR acc.rut = "'.$nombres.'" AND acc.tipo = 3 and acc.idempresa =  ' . $this->session->userdata('idempresa'));
 
 			$total = 0;
 
@@ -268,7 +268,7 @@ class Clientes extends CI_Controller {
 			left join comuna com on (acc.id_comuna = com.id)
 			left join vendedores ven on (acc.id_vendedor = ven.id)
 			left join cond_pago con on (acc.id_pago = con.id)
-			WHERE ' . $sql_nombre . ' 1 = 1');
+			WHERE ' . $sql_nombre . '  and acc.idempresa =  ' . $this->session->userdata('idempresa'));
 
 			$total = 0;
 
@@ -292,7 +292,7 @@ class Clientes extends CI_Controller {
 			left join comuna com on (acc.id_comuna = com.id)
 			left join vendedores ven on (acc.id_vendedor = ven.id)
 			left join cond_pago con on (acc.id_pago = con.id) 
-			WHERE acc.tipo = 1 or acc.tipo = 3
+			WHERE acc.tipo = 1 or acc.tipo = 3  and acc.idempresa =  ' . $this->session->userdata('idempresa') . '
 			order by acc.nombres asc
             limit '.$start.', '.$limit.'
             '
@@ -305,7 +305,7 @@ class Clientes extends CI_Controller {
 			left join comuna com on (acc.id_comuna = com.id)
 			left join vendedores ven on (acc.id_vendedor = ven.id)
 			left join cond_pago con on (acc.id_pago = con.id) 
-			WHERE acc.tipo = 1 or acc.tipo = 3
+			WHERE acc.tipo = 1 or acc.tipo = 3  and acc.idempresa =  ' . $this->session->userdata('idempresa') . '
 			order by acc.nombres asc
             limit '.$start.', '.$limit.''
 			);

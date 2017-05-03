@@ -85,13 +85,14 @@ class Sucursales_clientes extends CI_Controller {
 			left join ciudad c on (acc.id_ciudad = c.id)
 			left join comuna com on (acc.id_comuna = com.id)
 			left join clientes cli on (acc.id_cliente = cli.id)
-			WHERE acc.id_cliente="'.$nombres.'"');
+			WHERE acc.id_cliente="'.$nombres.'" and acc.idempresa = ' . $this->session->userdata('idempresa'));
 		}else{
 			$query = $this->db->query('SELECT acc.*, c.nombre as nombre_ciudad,
 			cli.rut as rut, com.nombre as nombre_comuna, cli.nombres as nombres FROM clientes_sucursales acc
 			left join ciudad c on (acc.id_ciudad = c.id)
 			left join comuna com on (acc.id_comuna = com.id)
-			left join clientes cli on (acc.id_cliente = cli.id)');
+			left join clientes cli on (acc.id_cliente = cli.id)
+			where  acc.idempresa = ' . $this->session->userdata('idempresa'));
 		}
 	
 		$data = array();

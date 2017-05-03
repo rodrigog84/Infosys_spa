@@ -581,3 +581,24 @@ ALTER TABLE `empresa`
 
 ALTER TABLE `caf`
 	ADD COLUMN `idempresa` INT(11) NOT NULL DEFAULT '0' AFTER `id`;	
+
+ALTER TABLE `factura_clientes`
+	ADD COLUMN `idempresa` INT(11) NOT NULL DEFAULT '0' AFTER `id`;
+
+update factura_clientes set idempresa = 1;
+
+ALTER TABLE `clientes`
+	ADD COLUMN `idempresa` INT(11) NOT NULL DEFAULT '0' AFTER `id`;
+
+update clientes set idempresa = 1;			
+
+
+ALTER TABLE `clientes_sucursales`
+	ADD COLUMN `idempresa` INT(11) NOT NULL DEFAULT '0' AFTER `id`;
+
+update clientes_sucursales set idempresa = 1;
+
+ALTER TABLE `productos`
+	ADD COLUMN `idempresa` INT(11) NOT NULL DEFAULT '0' AFTER `id`;
+
+update productos set idempresa = 1;		

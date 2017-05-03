@@ -1795,6 +1795,7 @@ public function cargacontribuyentes(){
 						fc inner join caf c on fc.idcaf = c.id
 						where c.tipo_caf = ' . $tipo_caf . '
 						and fc.estado = "P"
+						and c.idempresa = ' . $this->session->userdata('idempresa') . '
 						order by fc.folio limit 1 for update');
 
 		$folios_caf = $query->row();	
@@ -1981,7 +1982,7 @@ public function cargacontribuyentes(){
 			left join vendedores v on (acc.id_vendedor = v.id)
 			left join tipo_documento td on (acc.tipo_documento = td.id)
 			left join correlativos co on (acc.tipo_documento = co.id)
-			WHERE acc.estado="" AND ' . $sql_tipo_documento . ' 1 = 1'			
+			WHERE acc.estado="" AND ' . $sql_tipo_documento . ' acc.idempresa = ' . $this->session->userdata('idempresa')
 			);
 
 
@@ -2001,7 +2002,7 @@ public function cargacontribuyentes(){
 			left join clientes c on (acc.id_cliente = c.id)
 			left join vendedores v on (acc.id_vendedor = v.id)
 			left join tipo_documento td on (acc.tipo_documento = td.id)
-			WHERE acc.estado="" AND ' . $sql_tipo_documento . ' c.rut = "'.$nombres.'"');
+			WHERE acc.estado="" AND ' . $sql_tipo_documento . ' c.rut = "'.$nombres.'" and acc.idempresa = ' . $this->session->userdata('idempresa'));
 
 			$total = 0;
 
@@ -2017,7 +2018,7 @@ public function cargacontribuyentes(){
 			left join clientes c on (acc.id_cliente = c.id)
 			left join vendedores v on (acc.id_vendedor = v.id)
 			left join tipo_documento td on (acc.tipo_documento = td.id)
-			WHERE acc.estado="" AND ' . $sql_tipo_documento . ' c.rut = "'.$nombres.'"
+			WHERE acc.estado="" AND ' . $sql_tipo_documento . ' c.rut = "'.$nombres.'"  and acc.idempresa = ' . $this->session->userdata('idempresa') . '
 			order by acc.id desc
 			limit '.$start.', '.$limit.''		 
 		);
@@ -2037,7 +2038,7 @@ public function cargacontribuyentes(){
 			left join clientes c on (acc.id_cliente = c.id)
 			left join vendedores v on (acc.id_vendedor = v.id)
 			left join tipo_documento td on (acc.tipo_documento = td.id)
-			WHERE acc.estado="" AND ' . $sql_tipo_documento . '  ' . $sql_nombre . ' 1 = 1'
+			WHERE acc.estado="" AND ' . $sql_tipo_documento . '  ' . $sql_nombre . ' acc.idempresa = ' . $this->session->userdata('idempresa')
 			);
 
 			$total = 0;
@@ -2054,7 +2055,7 @@ public function cargacontribuyentes(){
 			left join clientes c on (acc.id_cliente = c.id)
 			left join vendedores v on (acc.id_vendedor = v.id)
 			left join tipo_documento td on (acc.tipo_documento = td.id)
-			WHERE acc.estado="" AND ' . $sql_tipo_documento . '  ' . $sql_nombre . ' 1 = 1
+			WHERE acc.estado="" AND ' . $sql_tipo_documento . '  ' . $sql_nombre . ' acc.idempresa = ' . $this->session->userdata('idempresa') . '
 			order by acc.id desc
 			limit '.$start.', '.$limit.''		 
 						
@@ -2069,7 +2070,7 @@ public function cargacontribuyentes(){
 			left join vendedores v on (acc.id_vendedor = v.id)
 			left join tipo_documento td on (acc.tipo_documento = td.id)
 			left join correlativos co on (acc.tipo_documento = co.id)
-			WHERE acc.estado="" AND ' . $sql_tipo_documento . ' 1 = 1
+			WHERE acc.estado="" AND ' . $sql_tipo_documento . ' acc.idempresa = ' . $this->session->userdata('idempresa') . '
 			order by acc.id desc
 			limit '.$start.', '.$limit.''	
 			
@@ -2081,7 +2082,7 @@ public function cargacontribuyentes(){
 			left join clientes c on (acc.id_cliente = c.id)
 			left join vendedores v on (acc.id_vendedor = v.id)
 			left join tipo_documento td on (acc.tipo_documento = td.id)
-			WHERE acc.estado="" AND ' . $sql_tipo_documento . ' acc.num_factura = "'.$nombres.'" ');
+			WHERE acc.estado="" AND ' . $sql_tipo_documento . ' acc.num_factura = "'.$nombres.'" and acc.idempresa = ' . $this->session->userdata('idempresa'));
 
 			$total = 0;
 
@@ -2097,7 +2098,7 @@ public function cargacontribuyentes(){
 			left join clientes c on (acc.id_cliente = c.id)
 			left join vendedores v on (acc.id_vendedor = v.id)
 			left join tipo_documento td on (acc.tipo_documento = td.id)
-			WHERE acc.estado="" AND ' . $sql_tipo_documento . ' acc.num_factura = "'.$nombres.'" order by acc.id desc
+			WHERE acc.estado="" AND ' . $sql_tipo_documento . ' acc.num_factura = "'.$nombres.'" and  acc.idempresa = ' . $this->session->userdata('idempresa') . ' order by acc.id desc
 			limit '.$start.', '.$limit.''		 
 		);
 
@@ -2110,7 +2111,7 @@ public function cargacontribuyentes(){
 			left join vendedores v on (acc.id_vendedor = v.id)
 			left join tipo_documento td on (acc.tipo_documento = td.id)
 			left join correlativos co on (acc.tipo_documento = co.id)
-			WHERE  acc.estado="" AND ' . $sql_tipo_documento . '  1 = 1 
+			WHERE  acc.estado="" AND ' . $sql_tipo_documento . '  acc.idempresa = ' . $this->session->userdata('idempresa') . '
 			order by acc.id desc		
 			limit '.$start.', '.$limit.''
 			);
@@ -2768,6 +2769,7 @@ public function cargacontribuyentes(){
 	    $this->db->update('correlativos', $data3);
 			
 		$factura_cliente = array(
+			'idempresa' => $this->session->userdata('idempresa'),
 			'tipo_documento' => $tipodocumento,
 	        'id_cliente' => $idcliente,
 	        'num_factura' => $numfactura,
